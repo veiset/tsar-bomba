@@ -22,6 +22,9 @@ move = {'LEFT'  : False,
         'UP'    : False,
         'DOWN'  : False}
 
+
+lastArrow = 'RIGHT' 
+
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -34,8 +37,10 @@ while True:
                 move['DOWN'] = True
             elif event.key == K_LEFT:
                 move['LEFT'] = True
+                lastArrow = 'LEFT' 
             elif event.key == K_RIGHT:
                 move['RIGHT'] = True 
+                lastArrow = 'RIGHT' 
 
         elif event.type == KEYUP:
             if event.key == K_UP:
@@ -49,15 +54,26 @@ while True:
 
     screen.fill((0,0,0))
     
-    if move['UP']:
-        pl.y -= 2
-    if move['DOWN']:
-        pl.y += 2
     if move['RIGHT']:
-        pl.x += 2
-        pl.animation = 'RIGHT'
+        if move['DOWN']:
+            pl.x += 1
+        else:
+            pl.x += 2
     if move['LEFT']:
-        pl.x -= 2
+        if move['DOWN']:
+            pl.x -= 1
+        else:
+            pl.x -= 2
+
+    if move['DOWN']:
+        if lastArrow == 'RIGHT':
+            pl.animation = 'DOWN_RIGHT'
+        else:
+            pl.animation = 'DOWN_LEFT'
+
+    elif move['RIGHT']:
+        pl.animation = 'RIGHT'
+    elif move['LEFT']:
         pl.animation = 'LEFT'
 
     pl.draw(screen)
