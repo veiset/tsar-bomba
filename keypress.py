@@ -8,7 +8,7 @@ class Keypress():
 
     def update(self,event):
         if event.type == QUIT:
-            self.keys['QUIT'] = True
+            self.key['QUIT'] = True
 
         elif event.type == KEYDOWN:
             
@@ -22,6 +22,8 @@ class Keypress():
             elif event.key == K_RIGHT:
                 self.key['RIGHT'] = True 
                 self.lastDirection = 'RIGHT' 
+            elif event.key == K_ESCAPE:
+                self.key['QUIT'] = True
 
         elif event.type == KEYUP:
             if event.key == K_UP:

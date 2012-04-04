@@ -16,7 +16,7 @@ fpsClock = pygame.time.Clock()
 
 pygame.init()
 
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Main')
 
 keystate = keypress.Keypress()
@@ -25,9 +25,14 @@ player = playerEntity.Player('Vegard', (100,100), keystate)
 f = floor.Floor((30,200,1000,10))
 
 delta = (1/60.0)*1000
-while True:
+game = True
+while game:
     for event in pygame.event.get():
         keystate.update(event)
+    
+    if keystate.state('QUIT'):
+        pygame.quit()
+        sys.exit()
 
     screen.fill((0,0,0))
     f.draw(screen)

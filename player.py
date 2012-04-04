@@ -24,29 +24,32 @@ class Player():
         self.x, self.y = pos
         self.dx = self.x
         self.dy = self.y
-        self.animation = 'RIGHT' # 'LEFT' / 'RIGHT' / 'UP' / 'DOWN'
+        self.animation = 'RIGHT' 
         self.onGround = False
         self.key = keystate
 
     def update(self, delta):
 
-        if not self.onGround:
-            self.y -= physics.gravity(self.y, self.dy, delta)
-
+        tmp = self.dy
         self.dy = self.y
-        self.dx = self.x
 
+        if not self.onGround:
+            self.y -= physics.gravity(self.y, tmp, delta)
 
         if self.key.state('RIGHT'):
             if self.key.state('DOWN'):
                 self.x += 1.0
             else:
                 self.x += 2.0
+
         if self.key.state('LEFT'):
             if self.key.state('DOWN'):
                 self.x -= 1.0
             else:
                 self.x -= 2.0
+        if self.key.state('UP'):
+            self.y -= 6
+            self.key.key['UP'] = False
 
         if self.key.state('DOWN'):
             if self.key.lastDirection == 'RIGHT':
