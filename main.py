@@ -50,13 +50,15 @@ while True:
     screen.fill((0,0,0))
     
     if move['UP']:
-        pl.y -= 1
+        pl.y -= 2
     if move['DOWN']:
-        pl.y += 1
+        pl.y += 2
     if move['RIGHT']:
-        pl.x += 1
+        pl.x += 2
+        pl.animation = 'RIGHT'
     if move['LEFT']:
-        pl.x -= 1
+        pl.x -= 2
+        pl.animation = 'LEFT'
 
     pl.draw(screen)
 
