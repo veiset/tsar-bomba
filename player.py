@@ -1,4 +1,5 @@
 import pygame
+import physics
 
 class Player():
     
@@ -18,10 +19,45 @@ class Player():
     model['LEFT'] = revModel(model['RIGHT'])
     model['DOWN_LEFT'] = revModel(model['DOWN_RIGHT'])
 
-    def __init__(self, name, pos):
+    def __init__(self, name, pos, keystate):
         self.name      = name
         self.x, self.y = pos
+        self.dx = self.x
+        self.dy = self.y
         self.animation = 'RIGHT' # 'LEFT' / 'RIGHT' / 'UP' / 'DOWN'
+        self.onGround = False
+        self.key = keystate
+
+    def update(self, delta):
+
+        if not self.onGround:
+            self.y -= physics.gravity(self.y, self.dy, delta)
+
+        self.dy = self.y
+        self.dx = self.x
+
+
+        if self.key.state('RIGHT'):
+            if self.key.state('DOWN'):
+                self.x += 1.0
+            else:
+                self.x += 2.0
+        if self.key.state('LEFT'):
+            if self.key.state('DOWN'):
+                self.x -= 1.0
+            else:
+                self.x -= 2.0
+
+        if self.key.state('DOWN'):
+            if self.key.lastDirection == 'RIGHT':
+                self.animation = 'DOWN_RIGHT'
+            else:
+                self.animation = 'DOWN_LEFT'
+
+        elif self.key.state('RIGHT'):
+            self.animation = 'RIGHT'
+        elif self.key.state('LEFT'):
+            self.animation = 'LEFT'
 
     def draw(self, screen):
         m = self.model[self.animation]
@@ -30,4 +66,4 @@ class Player():
         for r, row in enumerate(m):
             for i, element in enumerate(row):
                 if element:
-                    pygame.draw.rect(screen, element, (self.x+(size*i), self.y+(size*r), size, size)) 
+                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r), size, size)) 
