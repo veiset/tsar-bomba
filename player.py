@@ -50,6 +50,10 @@ class Player():
         if self.key.state('UP'):
             self.y -= 6
             self.key.key['UP'] = False
+            if self.animation == 'DOWN_RIGHT':
+                self.animation = 'RIGHT'
+            elif self.animation == 'DOWN_LEFT':
+                self.animation = 'LEFT'
 
         if self.key.state('DOWN'):
             if self.key.lastDirection == 'RIGHT':
