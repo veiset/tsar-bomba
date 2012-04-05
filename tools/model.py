@@ -73,7 +73,6 @@ while game:
                 else:
                     model[index[0]][index[1]] = 0
 
-            print event
         if event.type == KEYDOWN:
             outputModel()
 
