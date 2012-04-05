@@ -85,6 +85,9 @@ while game:
 
         if event.type == KEYDOWN:
             outputModel()
+            if event.key == K_ESCAPE:
+                pygame.quit()
+                sys.exit()
 
     screen.fill((0,0,0))
 
