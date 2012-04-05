@@ -64,9 +64,14 @@ class Player():
                 self.x -= 1.0
             else:
                 self.x -= 2.0
+        
         if self.key.state('UP'):
             if self.onGround:
                 self.y -= 5
+            if self.animation == 'DOWN_RIGHT':
+                self.animation = 'RIGHT'
+            if self.animation == 'DOWN_LEFT':
+                self.animation = 'LEFT'
 
         if self.key.state('DOWN'):
             if self.key.lastDirection == 'RIGHT':
