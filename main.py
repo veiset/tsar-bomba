@@ -4,6 +4,7 @@ import pygame, sys
 import player as playerEntity
 import world.floor as floor
 import npc.bear as bearEntity
+import npc.manne as manneEntity
 import keypress
 import physics
 
@@ -22,7 +23,11 @@ pygame.display.set_caption('Main')
 
 keystate = keypress.Keypress()
 player = playerEntity.Player('Vegard', (100,100), keystate)
-bear = bearEntity.Bear('Mofo', (400,100))
+
+npcs = []
+npcs.append(bearEntity.Bear('Mofo', (400,100)))
+npcs.append(manneEntity.Manne('F', (300,100)))
+
 
 f = floor.Floor((30,200,1000,10))
 
@@ -42,8 +47,9 @@ while game:
     player.update(delta)
     player.draw(screen)
 
-    bear.update(delta)
-    bear.draw(screen)
+    for npc in npcs:    
+        npc.update(delta)
+        npc.draw(screen)
 
     pygame.display.update()
     fpsClock.tick(60)

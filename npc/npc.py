@@ -8,7 +8,7 @@ class NPC():
         tmp = self.dy
         self.dy = self.y
 
-        if self.y > 450:
+        if self.y > 350:
             self.onGround = True
 
         if not self.onGround:
@@ -19,7 +19,7 @@ class NPC():
             m = self.model[self.animation]
         except:
             ''' No animation found '''
-        size = 15
+        size = 10
 
         for r, row in enumerate(m):
             for i, element in enumerate(row):
