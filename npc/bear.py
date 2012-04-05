@@ -5,30 +5,39 @@ class Bear():
     
     revModel = lambda x: [y[::-1] for y in x]
 
-    model = {'RIGHT':[[0,             0,   (127,32,0),  0],
-                     [(127,32,0),    (127,32,0), (127,32,0),  (127,32,0)],
-                     [(127,32,0),              (127,32,0),     (127,32,0),      (0, 0,0)],
-                     [(127,32,0),              0,     (127,32,0),      0]],
+    model = {'RIGHT':[[        0,         0,             0,                0],
+                     [         0,         0,             0,                0],
+                     [         0,         0,             0,                0],
+                     [         0,         0,     (127,32,0),               0],
+                     [(127,32,0),(127,32,0),     (127,32,0),      (127,32,0)],
+                     [(127,32,0),(127,32,0),     (127,32,0),               0],
+                     [(127,32,0),         0,     (127,32,0),               0]],
+
+
+             'STANDING_RIGHT':
+                     [[(127,32,0),        0,             0,                0],
+                     [(127,32,0),(127,32,0),             0,                0],
+                     [(127,32,0), 0,     0,               0],
+                     [(127,32,0),(127,32,0),     (127,32,0),      0],
+                     [(127,32,0),  0,     0,               0],
+                     [(127,32,0),(127,32,0),     0,               0]],
             }
+
     model['LEFT'] = revModel(model['RIGHT'])
+    model['STANDING_LEFT'] = revModel(model['STANDING_RIGHT'])
 
     def __init__(self, name, pos):
         self.name      = name
         self.x, self.y = pos
         self.dx = self.x
         self.dy = self.y
-        self.animation = 'RIGHT' 
+        self.animation = 'STANDING_RIGHT' 
         self.onGround = False
 
     def update(self, delta):
 
         tmp = self.dy
         self.dy = self.y
-
-        if self.y > 500:
-            self.onGround = True
-        else:
-            self.onGround = False
 
         if not self.onGround:
             self.y -= physics.gravity(self.y, tmp, delta)
