@@ -1,7 +1,6 @@
-import pygame
-import physics
+import npc
 
-class Bear():
+class Bear(npc.NPC):
     
     revModel = lambda x: [y[::-1] for y in x]
 
@@ -31,22 +30,6 @@ class Bear():
         self.x, self.y = pos
         self.dx = self.x
         self.dy = self.y
-        self.animation = 'STANDING_RIGHT' 
+        self.animation = 'LEFT'
         self.onGround = False
 
-    def update(self, delta):
-
-        tmp = self.dy
-        self.dy = self.y
-
-        if not self.onGround:
-            self.y -= physics.gravity(self.y, tmp, delta)
-
-    def draw(self, screen):
-        m = self.model[self.animation]
-        size = 15
-
-        for r, row in enumerate(m):
-            for i, element in enumerate(row):
-                if element:
-                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r), size, size)) 
