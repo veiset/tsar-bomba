@@ -6,6 +6,8 @@ import world.floor as floor
 import npc.bear as bearEntity
 import npc.manne as manneEntity
 import npc.moose as mooseEntity
+import npc.police as policeEntity
+import npc.dino as dinoEntity
 import keypress
 import physics
 
@@ -29,7 +31,8 @@ npcs = []
 npcs.append(bearEntity.Bear('Mofo', (400,100)))
 npcs.append(manneEntity.Manne('F', (300,100)))
 npcs.append(mooseEntity.Moose('MOO', (200,100)))
-
+npcs.append(policeEntity.Police('lol', (500, 100)))
+npcs.append(dinoEntity.Dino('hei', (600, 100)))
 
 f = floor.Floor((30,200,1000,10))
 
