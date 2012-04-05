@@ -54,11 +54,30 @@ while game:
     som.draw(screen, som.background)
     f.draw(screen)
 
-    player.update(delta)
 
+    direction = player.direction()
     col = collision.overlap(player.hitbox(),som.hitbox(som.player[0]))
     if col:
-        print "Collision"
+        if direction['LEFT'] and not player.blocked['LEFT']:
+            player.blocked['LEFT'] = True
+
+        if direction['RIGHT'] and not player.blocked['RIGHT']:
+            player.blocked['RIGHT'] = True
+
+        if direction['UP'] and not player.blocked['UP']:
+            player.blocked['UP'] = True
+            #player.y = player.dy
+
+        if direction['DOWN'] and not player.blocked['DOWN']:
+            player.blocked['DOWN'] = True
+            #player.y = player.dy
+    else:
+        player.blocked = {'LEFT' : False,
+                        'RIGHT': False,
+                        'DOWN' : False,
+                        'UP'   : False}
+
+    player.update(delta)
 
     som.draw(screen, som.player)
     player.draw(screen)

@@ -35,6 +35,19 @@ class Player():
         self.key = keystate
         self.size = 10
 
+    def direction(self):
+        direction = {'RIGHT': False, 'LEFT': False, 'UP': False, 'DOWN': False}
+        if (self.x>self.dx):
+            direction['RIGHT'] = True
+        if (self.x<self.dx):
+            direction['LEFT'] = True
+        if (self.y<self.dy):
+            direction['UP'] = True
+        if (self.y>self.dy):
+            direction['DOWN'] = True
+
+        return direction
+
     def hitbox(self):
 
         return collision.Hitbox(self.model[self.animation], (self.x, self.y), self.size)
@@ -47,35 +60,38 @@ class Player():
     
         if self.y >= 500:
             self.y = 500
-            self.onGround = True
+            self.blocked['DOWN'] = True
         else:
             self.onGround = False
 
-        if not self.onGround:
-            self.y -= physics.gravity(self.y, tmp, delta)
 
-        if self.key.state('RIGHT'):
+
+        if not self.blocked['DOWN']:
+            self.y -= physics.gravity(self.y, tmp, delta)
+        
+
+        if self.key.state('RIGHT') and (not self.blocked['RIGHT']):
             if self.key.state('DOWN'):
                 self.x += 1.0
             else:
                 self.x += 2.0
 
-        if self.key.state('LEFT'):
+        if self.key.state('LEFT') and (not self.blocked['LEFT']):
             if self.key.state('DOWN'):
                 self.x -= 1.0
             else:
                 self.x -= 2.0
         
-        if self.key.state('UP'):
-            if self.onGround:
+        if self.key.state('UP') and (not self.blocked['UP']):
+            if self.blocked['DOWN']:
                 self.y -= 5
             if self.animation == 'DOWN_RIGHT':
                 self.animation = 'RIGHT'
             if self.animation == 'DOWN_LEFT':
                 self.animation = 'LEFT'
 
-        if self.key.state('DOWN'):
-            if self.onGround: 
+        if self.key.state('DOWN') and not self.blocked['DOWN']:
+            if self.blocked['DOWN']:
                 if self.key.lastDirection == 'RIGHT':
                     self.animation = 'DOWN_RIGHT'
                 else:
