@@ -8,6 +8,9 @@ class NPC():
         tmp = self.dy
         self.dy = self.y
 
+        if self.y > 450:
+            self.onGround = True
+
         if not self.onGround:
             self.y -= physics.gravity(self.y, tmp, delta)
 
