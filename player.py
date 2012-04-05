@@ -28,10 +28,27 @@ class Player():
         self.onGround = False
         self.key = keystate
 
+    def hitbox(self):
+        hitbox = []
+        for row in self.model[self.animation]:
+            hrow = []
+            for element in row:
+                if element:
+                    hrow.append(True)
+                else:
+                    hrow.append(False)
+            hitbox.append(hrow)
+        return hitbox
+
     def update(self, delta):
 
         tmp = self.dy
         self.dy = self.y
+    
+        if self.y > 500:
+            self.onGround = True
+        else:
+            self.onGround = False
 
         if not self.onGround:
             self.y -= physics.gravity(self.y, tmp, delta)
@@ -48,12 +65,8 @@ class Player():
             else:
                 self.x -= 2.0
         if self.key.state('UP'):
-            self.y -= 6
-            self.key.key['UP'] = False
-            if self.animation == 'DOWN_RIGHT':
-                self.animation = 'RIGHT'
-            elif self.animation == 'DOWN_LEFT':
-                self.animation = 'LEFT'
+            if self.onGround:
+                self.y -= 5
 
         if self.key.state('DOWN'):
             if self.key.lastDirection == 'RIGHT':
@@ -65,6 +78,7 @@ class Player():
             self.animation = 'RIGHT'
         elif self.key.state('LEFT'):
             self.animation = 'LEFT'
+        
 
     def draw(self, screen):
         m = self.model[self.animation]

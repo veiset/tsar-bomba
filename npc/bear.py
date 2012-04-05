@@ -25,6 +25,11 @@ class Bear():
         tmp = self.dy
         self.dy = self.y
 
+        if self.y > 500:
+            self.onGround = True
+        else:
+            self.onGround = False
+
         if not self.onGround:
             self.y -= physics.gravity(self.y, tmp, delta)
 
