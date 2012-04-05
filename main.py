@@ -11,6 +11,7 @@ import npc.dino as dinoEntity
 import keypress
 import physics
 import objectmanager
+import collision
 
 som = objectmanager.StaticObjectManager()
 fpsClock = pygame.time.Clock()
@@ -33,6 +34,7 @@ npcs.append(dinoEntity.Dino('hei', (600, 100)))
 
 som.add('Tree01',(200,500))
 som.add('Tree01',(100,500),'background')
+som.add('Tree01',(400,500),'player')
 som.add('IceTap01',(500,280))
 f = floor.Floor((30,200,1000,10))
 
@@ -53,13 +55,16 @@ while game:
     f.draw(screen)
 
     player.update(delta)
-    player.draw(screen)
+
+    collision.overlap(player.hitbox(),som.hitbox(som.player[0]))
 
     som.draw(screen, som.player)
+    player.draw(screen)
 
-    for npc in npcs:    
-        npc.update(delta)
-        npc.draw(screen)
+
+    #for npc in npcs:    
+    #    npc.update(delta)
+    #    npc.draw(screen)
 
     som.draw(screen, som.front)
 

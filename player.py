@@ -1,6 +1,7 @@
 import pygame
 import physics
 import random
+import collision 
 
 class Player():
     
@@ -27,26 +28,56 @@ class Player():
         self.dy = self.y
         self.animation = 'RIGHT' 
         self.onGround = False
+        self.blocked = {'LEFT' : False,
+                        'RIGHT': False,
+                        'DOWN' : False, 
+                        'UP'   : False}
         self.key = keystate
+        self.size = 10
 
     def hitbox(self):
         hitbox = []
-        for row in self.model[self.animation]:
-            hrow = []
-            for element in row:
-                if element:
-                    hrow.append(True)
-                else:
-                    hrow.append(False)
-            hitbox.append(hrow)
-        return hitbox
+        m = self.model[self.animation]
+        rows = len(m)
+        cols = len(m[0])
+
+
+        left  = [-1 for _ in range(rows)]
+        right = [-1 for _ in range(rows)]
+        down  = [-1 for _ in range(cols)]
+        up    = [-1 for _ in range(cols)]
+
+        for r, row in enumerate(m):
+            for c, col in enumerate(row):
+                if col:
+                    left[r] = c 
+                    break
+            for c, col in enumerate(row[::-1]):
+                if col:
+                    right[r] = c 
+                    break
+
+        for c in range(cols):
+            for r in range(rows):
+                if m[r][c]:
+                    down[c] = r
+                    break
+
+            for r in range(rows):
+                if m[(rows-1)-r][c]:
+                    up[c] = r
+                    break
+
+        return collision.Hitbox((left, right, down, up), (rows, cols), self.size, (self.x, self.y), (self.dx, self.dy))
 
     def update(self, delta):
 
         tmp = self.dy
         self.dy = self.y
+        self.dx = self.x
     
-        if self.y > 500:
+        if self.y >= 500:
+            self.y = 500
             self.onGround = True
         else:
             self.onGround = False
@@ -89,25 +120,24 @@ class Player():
 
     def draw(self, screen):
         m = self.model[self.animation]
-        size = 10
         
-        wobbleWobble = random.choice([0,1,-1])
-        nobbleWobble = random.choice([0,1])
+        #wobbleWobble = random.choice([0,1,-1])
+        #nobbleWobble = random.choice([0,1])
 
         # Just for fun. This looks very stupid!
-        if self.key.state('LEFT') or self.key.state('RIGHT'):
-            for r, row in enumerate(m[:-1]):
-                for i, element in enumerate(row):
-                    if element:
-                        pygame.draw.rect(screen, element, (int(self.x)+(size*i)+wobbleWobble, int(self.y)+(size*r)+nobbleWobble-len(m)*size, size, size)) 
+       # if self.key.state('LEFT') or self.key.state('RIGHT'):
+       #     for r, row in enumerate(m[:-1]):
+       #         for i, element in enumerate(row):
+       #             if element:
+       #                 pygame.draw.rect(screen, element, (int(self.x)+(size*i)+wobbleWobble, int(self.y)+(size*r)+nobbleWobble-len(m)*size, size, size)) 
 
-            for i, element in enumerate(m[len(m)-1]):
+       #     for i, element in enumerate(m[len(m)-1]):
+       #         if element:
+       #             pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*(len(m)-1))-len(m)*size, size, size)) 
+
+       # else:
+        for r, row in enumerate(m):
+            for i, element in enumerate(row):
                 if element:
-                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*(len(m)-1))-len(m)*size, size, size)) 
-
-        else:
-            for r, row in enumerate(m):
-                for i, element in enumerate(row):
-                    if element:
-                        pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r)-len(m)*size, size, size)) 
+                    pygame.draw.rect(screen, element, (int(self.x)+(self.size*i), int(self.y)+(self.size*r)-len(m)*self.size, self.size, self.size)) 
         

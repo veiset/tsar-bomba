@@ -1,5 +1,6 @@
 from lxml import etree
 import pygame
+import collision 
 
 class StaticObjectManager():
 
@@ -11,6 +12,7 @@ class StaticObjectManager():
         self.background = []
         self.player = []
         self.front = []
+        self.size = 10
         
         self.entityDict = {'background': self.background,
                            'player'    : self.player,
@@ -44,13 +46,47 @@ class StaticObjectManager():
                 x, y  = entity['pos']
             except:
                 ''' No animation found '''
-            size = 10
 
             for r, row in enumerate(m):
                 for i, element in enumerate(row):
                     if element:
-                        pygame.draw.rect(screen, element, (int(x)+(size*i), int(y)+(size*r)-len(m)*10, size, size)) 
+                        pygame.draw.rect(screen, element, (int(x)+(self.size*i), int(y)+(self.size*r)-len(m)*self.size, self.size, self.size)) 
 
+
+    def hitbox(self, entity):
+        hitbox = []
+        m = entity['model']
+        rows = len(m)
+        cols = len(m[0])
+
+
+        left  = [-1 for _ in range(rows)]
+        right = [-1 for _ in range(rows)]
+        down  = [-1 for _ in range(cols)]
+        up    = [-1 for _ in range(cols)]
+
+        for r, row in enumerate(m):
+            for c, col in enumerate(row):
+                if col:
+                    left[r] = c 
+                    break
+            for c, col in enumerate(row[::-1]):
+                if col:
+                    right[r] = c 
+                    break
+
+        for c in range(cols):
+            for r in range(rows):
+                if m[r][c]:
+                    down[c] = r
+                    break
+
+            for r in range(rows):
+                if m[(rows-1)-r][c]:
+                    up[c] = r
+                    break
+
+        return collision.Hitbox((left, right, down, up), (rows, cols), self.size, entity['pos'])
 
 
 #som = StaticObjectManager()
