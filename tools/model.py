@@ -52,7 +52,7 @@ colors.append(l)
 pygame.mouse.set_visible(1)
 
 currentCol = (255,0,0)
-model = [[0 for _ in range(10)] for _ in range(10)]
+model = [[0 for _ in range(20)] for _ in range(20)]
 while game:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -67,7 +67,7 @@ while game:
                 except:
                     print 'out of bound'
             else:
-                index = ((mx-200)/60, (my)/60)
+                index = ((mx-200)/30, (my)/30)
                 if event.button == 1:
                     model[index[0]][index[1]] = currentCol
                 else:
@@ -78,9 +78,9 @@ while game:
 
     screen.fill((0,0,0))
 
-    for x in range(10):
-        pygame.draw.line(screen, (100,100,100), (200+(60*x), 0), (200+(60*x),600))
-        pygame.draw.line(screen, (100,100,100), (200, 60*x),  (800, 60*x))
+    for x in range(20):
+        pygame.draw.line(screen, (100,100,100), (200+(30*x), 0), (200+(30*x),600))
+        pygame.draw.line(screen, (100,100,100), (200, 30*x),  (800, 30*x))
 
     for x in range(255):
         pygame.draw.rect(screen, currentCol, (0,520,200,200))
@@ -92,7 +92,7 @@ while game:
     for x, row in enumerate(model):
         for y, el in enumerate(row):
             if el:
-                pygame.draw.rect(screen, el, (200+(60*x),60*y,60,60))
+                pygame.draw.rect(screen, el, (200+(30*x),30*y,30,30))
 
 
     pygame.display.update()
