@@ -74,10 +74,11 @@ class Player():
                 self.animation = 'LEFT'
 
         if self.key.state('DOWN'):
-            if self.key.lastDirection == 'RIGHT':
-                self.animation = 'DOWN_RIGHT'
-            else:
-                self.animation = 'DOWN_LEFT'
+            if self.onGround: 
+                if self.key.lastDirection == 'RIGHT':
+                    self.animation = 'DOWN_RIGHT'
+                else:
+                    self.animation = 'DOWN_LEFT'
 
         elif self.key.state('RIGHT'):
             self.animation = 'RIGHT'
