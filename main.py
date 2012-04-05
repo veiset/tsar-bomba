@@ -33,7 +33,7 @@ npcs.append(dinoEntity.Dino('hei', (600, 100)))
 
 som.add('Tree01',(200,500))
 som.add('Tree01',(100,500),'background')
-
+som.add('IceTap01',(500,280))
 f = floor.Floor((30,200,1000,10))
 
 delta = (1/60.0)*1000
