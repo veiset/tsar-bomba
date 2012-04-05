@@ -99,15 +99,15 @@ class Player():
             for r, row in enumerate(m[:-1]):
                 for i, element in enumerate(row):
                     if element:
-                        pygame.draw.rect(screen, element, (int(self.x)+(size*i)+wobbleWobble, int(self.y)+(size*r)+nobbleWobble, size, size)) 
+                        pygame.draw.rect(screen, element, (int(self.x)+(size*i)+wobbleWobble, int(self.y)+(size*r)+nobbleWobble-len(m)*size, size, size)) 
 
             for i, element in enumerate(m[len(m)-1]):
                 if element:
-                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*(len(m)-1)), size, size)) 
+                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*(len(m)-1))-len(m)*size, size, size)) 
 
         else:
             for r, row in enumerate(m):
                 for i, element in enumerate(row):
                     if element:
-                        pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r), size, size)) 
+                        pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r)-len(m)*size, size, size)) 
         
