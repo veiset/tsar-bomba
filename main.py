@@ -10,13 +10,9 @@ import npc.police as policeEntity
 import npc.dino as dinoEntity
 import keypress
 import physics
+import objectmanager
 
-
-menuBG = pygame.Surface([250,720])
-menuBG.set_alpha(178)
-menuBG.fill((50,50,50))
-
-
+som = objectmanager.StaticObjectManager()
 fpsClock = pygame.time.Clock()
 
 pygame.init()
@@ -34,6 +30,10 @@ npcs.append(mooseEntity.Moose('MOO', (200,100)))
 npcs.append(policeEntity.Police('lol', (500, 100)))
 npcs.append(dinoEntity.Dino('hei', (600, 100)))
 
+
+som.add('Tree01',(200,500))
+som.add('Tree01',(100,500),'background')
+
 f = floor.Floor((30,200,1000,10))
 
 delta = (1/60.0)*1000
@@ -46,15 +46,22 @@ while game:
         pygame.quit()
         sys.exit()
 
+
     screen.fill((0,0,0))
+
+    som.draw(screen, som.background)
     f.draw(screen)
 
     player.update(delta)
     player.draw(screen)
 
+    som.draw(screen, som.player)
+
     for npc in npcs:    
         npc.update(delta)
         npc.draw(screen)
+
+    som.draw(screen, som.front)
 
     pygame.display.update()
     fpsClock.tick(60)
