@@ -5,6 +5,7 @@ import player as playerEntity
 import world.floor as floor
 import npc.bear as bearEntity
 import npc.manne as manneEntity
+import npc.moose as mooseEntity
 import keypress
 import physics
 
@@ -27,6 +28,7 @@ player = playerEntity.Player('Vegard', (100,100), keystate)
 npcs = []
 npcs.append(bearEntity.Bear('Mofo', (400,100)))
 npcs.append(manneEntity.Manne('F', (300,100)))
+npcs.append(mooseEntity.Moose('MOO', (200,100)))
 
 
 f = floor.Floor((30,200,1000,10))

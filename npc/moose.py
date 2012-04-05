@@ -1,7 +1,6 @@
-import pygame
-import physics
+import npc 
 
-class Moose():
+class Moose(npc.NPC):
     revModel = lambda x: [y[::-1] for y in x]
 
     model = {}
@@ -24,23 +23,3 @@ class Moose():
         self.dy = self.y
         self.animation = 'LEFT'
         self.onGround = False
-
-    def update(self, delta):
-
-        tmp = self.dy
-        self.dy = self.y
-        if self.y > 400:
-            self.onGround = True
-
-        if not self.onGround:
-            self.y -= physics.gravity(self.y, tmp, delta)
-
-    def draw(self, screen):
-        m = self.model[self.animation]
-        size = 15
-
-        for r, row in enumerate(m):
-            for i, element in enumerate(row):
-                if element:
-                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r), size, size)) 
-
