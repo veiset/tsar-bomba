@@ -41,13 +41,20 @@ def outputModel():
     mx += 1
     my += 1
 
-    print "model['MOTION'] = ["
+    print "    <ENTITY>"
+    print "        <NAME>EditMe</NAME>"
+    print "        <LEVEL>front</LEVEL>"
+    print "        <MODEL>"
+    print "[",
     for y in range(my):
         print "[",
         for x in range(mx):
             print model[x][y],",",
         print "],"
     print "]"
+    print "        </MODEL>"
+    print "    </ENTITY>"
+
 
 
 colors.append(l)
