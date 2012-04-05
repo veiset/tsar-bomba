@@ -26,6 +26,8 @@ for x in colset.rgb:
         colors.append(l)
         l = []
 
+lastUsed = []
+
 def outputModel():
     print '---- COPY & PASTE -----'
     mx = 0
@@ -61,12 +63,20 @@ while game:
         
         if event.type == MOUSEBUTTONDOWN:
             mx, my = event.pos
-            if mx < 200:
+            if mx < 200 and my<500:
                 try:
                     currentCol = colors[my/12][mx/12]
+                    lastUsed.append(currentCol)
                 except:
                     print 'out of bound'
-            else:
+            elif mx < 200 and 520>my>500:
+                try:
+                    currentCol = lastUsed[::-1][mx/20]
+                except:
+                    print 'out of bound'
+            elif mx < 30 and 600>my>570:
+                model = [[0 for _ in range(20)] for _ in range(20)]
+            elif mx>200:
                 index = ((mx-200)/30, (my)/30)
                 if event.button == 1:
                     model[index[0]][index[1]] = currentCol
@@ -94,6 +104,10 @@ while game:
             if el:
                 pygame.draw.rect(screen, el, (200+(30*x),30*y,30,30))
 
+    for x, c in enumerate(lastUsed[::-1][0:10]):
+        pygame.draw.rect(screen, c, ((x*20), 500, 20, 20))
+
+    pygame.draw.rect(screen, (0,0,0), (0, 570, 30, 30))
 
     pygame.display.update()
     fpsClock.tick(60)
