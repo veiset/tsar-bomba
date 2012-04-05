@@ -36,39 +36,8 @@ class Player():
         self.size = 10
 
     def hitbox(self):
-        hitbox = []
-        m = self.model[self.animation]
-        rows = len(m)
-        cols = len(m[0])
 
-
-        left  = [-1 for _ in range(rows)]
-        right = [-1 for _ in range(rows)]
-        down  = [-1 for _ in range(cols)]
-        up    = [-1 for _ in range(cols)]
-
-        for r, row in enumerate(m):
-            for c, col in enumerate(row):
-                if col:
-                    left[r] = c 
-                    break
-            for c, col in enumerate(row[::-1]):
-                if col:
-                    right[r] = c 
-                    break
-
-        for c in range(cols):
-            for r in range(rows):
-                if m[r][c]:
-                    down[c] = r
-                    break
-
-            for r in range(rows):
-                if m[(rows-1)-r][c]:
-                    up[c] = r
-                    break
-
-        return collision.Hitbox((left, right, down, up), (rows, cols), self.size, (self.x, self.y), (self.dx, self.dy))
+        return collision.Hitbox(self.model[self.animation], (self.x, self.y), self.size)
 
     def update(self, delta):
 

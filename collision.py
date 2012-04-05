@@ -1,58 +1,44 @@
+import time
 class Hitbox():
 
-    def __init__(self, bound, size, blocksize, pos, delta=None):
-        self.bound = {'left'  : bound[0],
-                      'right' : bound[1],
-                      'down'  : bound[2],
-                      'up'    : bound[3]}
-        self.rows, self.cols = size
-        self.blocksize = blocksize
+    def __init__(self, model, pos, size):
+        self.model = model
         self.x, self.y = pos
-
-        if delta:
-            self.dx, self.dy = delta
-        else:
-            self.dx = None
-            self.dy = None
+        self.size = size
 
     def calcBound(self):
-        bbox = {}
+        boxes = []
 
-        right = []
-        left = []
-        up = []
-        down = []
+        for x, row in enumerate(self.model):
+            for y, el in enumerate(row):
+                if el:
+                    dx = self.x+(self.size*y)
+                    dy = self.y+(self.size*x)-len(self.model)*self.size
 
-        for y, b in enumerate(self.bound['right']):
-            r = (self.x+self.blocksize*self.cols)-(b*self.blocksize)
-            rb = (self.y-self.blocksize*self.rows)+self.blocksize*y
-            right.append((r, (rb, rb+self.blocksize)))
+                    boxes.append(((dx, dx+self.size),(dy,+dy+self.size)))
 
-        for y, b in enumerate(self.bound['left']):
-            r = (self.x)+(b*self.blocksize)
-            rb = (self.y-self.blocksize*self.rows)+self.blocksize*y
-            left.append((r, (rb, rb+self.blocksize)))
+        return boxes
 
-        for y, b in enumerate(self.bound['up']):
-            r = (self.y)-(b*self.blocksize)
-            rb = (self.x+y*self.blocksize)
-            up.append((r, (rb, rb+self.blocksize)))
-
-        for y, b in enumerate(self.bound['down']):
-            r = (self.y-self.blocksize*self.rows)+(b*self.blocksize)
-            rb = (self.x+y*self.blocksize)
-            down.append((r, (rb, rb+self.blocksize)))
-
-        return {'right': right, 'left': left, 'up': up, 'down': down}
 
 def overlap(player, static):
-    print player
-
-    print player.x, player.y
 
     bbox = player.calcBound()
-    for l in bbox['left']:
-        print l
+    bbox2 = static.calcBound()
 
-    print static
+
+    for b in bbox:
+        for bb in bbox2:
+            if match(b,bb):
+                return True
+
+
+def match(bbox, bbox2):
+    x, y = bbox
+    x2, y2 = bbox2
+
+    if not (x[0] > x2[1] or 
+              x[1] < x2[0] or 
+              y[0] > y2[1] or 
+              y[1] < y2[0]):
+        return True
 

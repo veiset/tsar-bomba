@@ -54,41 +54,7 @@ class StaticObjectManager():
 
 
     def hitbox(self, entity):
-        hitbox = []
         m = entity['model']
-        rows = len(m)
-        cols = len(m[0])
+        return collision.Hitbox(m, entity['pos'], self.size)
 
-
-        left  = [-1 for _ in range(rows)]
-        right = [-1 for _ in range(rows)]
-        down  = [-1 for _ in range(cols)]
-        up    = [-1 for _ in range(cols)]
-
-        for r, row in enumerate(m):
-            for c, col in enumerate(row):
-                if col:
-                    left[r] = c 
-                    break
-            for c, col in enumerate(row[::-1]):
-                if col:
-                    right[r] = c 
-                    break
-
-        for c in range(cols):
-            for r in range(rows):
-                if m[r][c]:
-                    down[c] = r
-                    break
-
-            for r in range(rows):
-                if m[(rows-1)-r][c]:
-                    up[c] = r
-                    break
-
-        return collision.Hitbox((left, right, down, up), (rows, cols), self.size, entity['pos'])
-
-
-#som = StaticObjectManager()
-#som.add('Tree01', (100,200))
 

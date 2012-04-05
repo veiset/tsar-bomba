@@ -56,7 +56,9 @@ while game:
 
     player.update(delta)
 
-    collision.overlap(player.hitbox(),som.hitbox(som.player[0]))
+    col = collision.overlap(player.hitbox(),som.hitbox(som.player[0]))
+    if col:
+        print "Collision"
 
     som.draw(screen, som.player)
     player.draw(screen)
