@@ -62,27 +62,25 @@ class Player():
             self.y = 500
             self.blocked['DOWN'] = True
         else:
-            self.onGround = False
-
-
+            self.blocked['DOWN'] = False
 
         if not self.blocked['DOWN']:
             self.y -= physics.gravity(self.y, tmp, delta)
         
 
-        if self.key.state('RIGHT') and (not self.blocked['RIGHT']):
+        if self.key.state('RIGHT'):
             if self.key.state('DOWN'):
                 self.x += 1.0
             else:
                 self.x += 2.0
 
-        if self.key.state('LEFT') and (not self.blocked['LEFT']):
+        if self.key.state('LEFT'):
             if self.key.state('DOWN'):
                 self.x -= 1.0
             else:
                 self.x -= 2.0
         
-        if self.key.state('UP') and (not self.blocked['UP']):
+        if self.key.state('UP'):
             if self.blocked['DOWN']:
                 self.y -= 5
             if self.animation == 'DOWN_RIGHT':
@@ -90,7 +88,7 @@ class Player():
             if self.animation == 'DOWN_LEFT':
                 self.animation = 'LEFT'
 
-        if self.key.state('DOWN') and not self.blocked['DOWN']:
+        if self.key.state('DOWN'):
             if self.blocked['DOWN']:
                 if self.key.lastDirection == 'RIGHT':
                     self.animation = 'DOWN_RIGHT'
