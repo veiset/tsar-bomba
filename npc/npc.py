@@ -8,7 +8,7 @@ class NPC():
         tmp = self.dy
         self.dy = self.y
 
-        if self.y > 350:
+        if self.y > 550:
             self.onGround = True
 
         if not self.onGround:
@@ -24,5 +24,5 @@ class NPC():
         for r, row in enumerate(m):
             for i, element in enumerate(row):
                 if element:
-                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r), size, size)) 
+                    pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*r)-len(m)*10, size, size)) 
 
