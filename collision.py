@@ -28,17 +28,32 @@ def overlap(player, static):
 
     for b in bbox:
         for bb in bbox2:
-            if match(b,bb):
-                return True
+            m = match(b,bb)
+            if m: return m
 
 
 def match(bbox, bbox2):
     x, y = bbox
     x2, y2 = bbox2
 
-    if not (x[0] > x2[1] or 
-              x[1] < x2[0] or 
-              y[0] > y2[1] or 
-              y[1] < y2[0]):
-        return True
+    if not (x[0] > x2[1] 
+            or x[1] < x2[0] 
+            or y[0] > y2[1] 
+            or y[1] < y2[0]):
 
+        if ((x[0] < x2[0] and x2[0] < x[1])
+            or (x[0] < x2[1] and x2[1] < x[1])):
+            if y[0]-y2[0] > 5.0:
+                return "UP"
+            elif y[0]-y2[0] < -5.0:
+                return "DOWN"
+            
+        if (not ((x[0] < x2[0] and x2[0] < x[1])
+            or (x[0] < x2[1] and x2[1] < x[1]))
+            and (x[0] <= x[1])):
+            if(x[0]-x2[0] > 5.0):
+                return "LEFT"
+            elif (x[0]-x2[0] < -5.0):
+                return "RIGHT"
+
+    return False

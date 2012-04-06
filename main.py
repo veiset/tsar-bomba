@@ -22,7 +22,7 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Main')
 
 keystate = keypress.Keypress()
-player = playerEntity.Player('Vegard', (100,100), keystate)
+player = playerEntity.Player('Vegard', (300,450), keystate)
 
 npcs = []
 npcs.append(bearEntity.Bear('Mofo', (400,100)))
@@ -51,17 +51,26 @@ while game:
 
     screen.fill((0,0,0))
 
+    col = collision.overlap(player.hitbox(),som.hitbox(som.player[0]))
+    print col
+    if col:
+        player.blocked[col] = True
+        if not col == "DOWN":
+            player.x = player.dx
+        player.y = player.dy
+    else:
+        player.blocked = {'LEFT' : False,
+                        'RIGHT': False,
+                        'DOWN' : player.blocked["DOWN"],
+                        'UP'   : False}
+
+    player.update(delta)
+
+
     som.draw(screen, som.background)
     f.draw(screen)
 
 
-    direction = player.direction()
-    col = collision.overlap(player.hitbox(),som.hitbox(som.player[0]))
-    if not col:
-        player.update(delta)
-    else:
-        player.y = player.dy
-        player.x = player.dx
 
     som.draw(screen, som.player)
     player.draw(screen)
@@ -74,5 +83,5 @@ while game:
     som.draw(screen, som.front)
 
     pygame.display.update()
-    fpsClock.tick(60)
+    fpsClock.tick(30)
     

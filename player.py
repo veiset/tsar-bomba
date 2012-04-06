@@ -32,6 +32,7 @@ class Player():
                         'RIGHT': False,
                         'DOWN' : False, 
                         'UP'   : False}
+
         self.key = keystate
         self.size = 10
 
@@ -61,20 +62,20 @@ class Player():
         if self.y >= 500:
             self.y = 500
             self.blocked['DOWN'] = True
-        else:
-            self.blocked['DOWN'] = False
 
         if not self.blocked['DOWN']:
             self.y -= physics.gravity(self.y, tmp, delta)
         
 
         if self.key.state('RIGHT'):
+            self.blocked["DOWN"] = False
             if self.key.state('DOWN'):
                 self.x += 1.0
             else:
                 self.x += 2.0
 
         if self.key.state('LEFT'):
+            self.blocked["DOWN"] = False
             if self.key.state('DOWN'):
                 self.x -= 1.0
             else:
@@ -83,6 +84,7 @@ class Player():
         if self.key.state('UP'):
             if self.blocked['DOWN']:
                 self.y -= 5
+                self.blocked["DOWN"] = False
             if self.animation == 'DOWN_RIGHT':
                 self.animation = 'RIGHT'
             if self.animation == 'DOWN_LEFT':
@@ -104,21 +106,6 @@ class Player():
     def draw(self, screen):
         m = self.model[self.animation]
         
-        #wobbleWobble = random.choice([0,1,-1])
-        #nobbleWobble = random.choice([0,1])
-
-        # Just for fun. This looks very stupid!
-       # if self.key.state('LEFT') or self.key.state('RIGHT'):
-       #     for r, row in enumerate(m[:-1]):
-       #         for i, element in enumerate(row):
-       #             if element:
-       #                 pygame.draw.rect(screen, element, (int(self.x)+(size*i)+wobbleWobble, int(self.y)+(size*r)+nobbleWobble-len(m)*size, size, size)) 
-
-       #     for i, element in enumerate(m[len(m)-1]):
-       #         if element:
-       #             pygame.draw.rect(screen, element, (int(self.x)+(size*i), int(self.y)+(size*(len(m)-1))-len(m)*size, size, size)) 
-
-       # else:
         for r, row in enumerate(m):
             for i, element in enumerate(row):
                 if element:
