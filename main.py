@@ -54,6 +54,7 @@ while game:
 
     movex = 0
     movey = 0
+
     # Handle input
     if keystate.state('LEFT'):
         movex += -2.0
@@ -72,11 +73,6 @@ while game:
 
     bound = collision.calcBound(player.nextModel(movex,movey), (player.x+movex, player.y+movey), player.size)
     cols = []
-    #t = time.time()
-    #for el in som.player:
-    #    r = collision.collision(bound, el['bbox'])
-    #    cols.extend(r)
-    #print time.time()-t
 
     static = collision.calcBound(*som.getStaticGrid((player.x, player.y), 4, 4))
     cols = collision.collision(bound, static)
@@ -87,45 +83,59 @@ while game:
     rightTiles  = []
    
     player.onGround = False
+    player.onCiling = False
+    player.blockedLeft = False
+    player.blockedRight = False
+    cilingMin = 0.0
 
     for col in cols:
         a, b = col
         if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
             leftTiles.append(b)
             movex = 0
+            player.blockedRight = True
         if a.hitsRightOf(b) and a.xOverlap(b) < a.yOverlap(b):
             rightTiles.append(b)
             movex = 0
+            player.blockedLeft = True
+
         if a.hitsTopOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-            groundTiles.append(col)
-            movey = 0
-            player.onGround = True
+            if a.xOverlap(b) > movex and a.xOverlap(b) > 2.0:
+                groundTiles.append(col)
+                movey = 0
+                player.onGround = True
+                print a.yOverlap(b), a.xOverlap(b)
 
         if a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-            cilingTiles.append(col)
-            movey = 0
 
+            if a.xOverlap(b) > movex and a.xOverlap(b) > 2.0:
+                cilingTiles.append(col)
+                player.onCiling = True
+                #movey = (player.dy-player.y) 
+                movey = 0
+                if cilingMin < (b.bottom-a.top):
+                    cilingMin = (b.bottom-a.top)
+#            player.y = player.y+(a.top-b.bottom)
+                #player.x = player.dx
 
-    for col in cilingTiles:
-        a, b = col
-        if (a.intersect(b)):
-            cols.remove(col)
+    if player.onCiling:
+        player.y += cilingMin
+        player.dy = player.y
+
 
     if not player.onGround:
         for col in cols:
             a, b = col
-            if a.intersect(b):
-                if (a.hitsLeftOf(b) or a.hitsRightOf(b)):
-                    ''' '''
+            if (a.hitsLeftOf(b) or a.hitsRightOf(b)):
+                ''' '''
     else:
         for col in groundTiles:
             a, b = col
-            if (a.intersect(b)):
-                if (a.hitsTopOf(b)):
-                    try:
-                        cols.remove(col)
-                    except:
-                        ''' tile was also a ciling '''
+            if (a.hitsTopOf(b)):
+                try:
+                    cols.remove(col)
+                except:
+                    ''' tile was also a ciling '''
 
     for col in cols:
         a, b = col
@@ -136,7 +146,7 @@ while game:
     if not cols:
         player.model = player.nextModel(movex,movey)
 
-
+    print len(cols), len(leftTiles), len(rightTiles), len(cilingTiles), len(groundTiles)
     player.update(delta)
     player.x += movex
     player.y += movey
