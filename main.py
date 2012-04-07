@@ -44,13 +44,23 @@ som.add('IceTap01',(500,280),'player')
 
 delta = (1/60.0)*1000
 game = True
+fpsc = 0
+t = time.time()
 while game:
+
+    fpsc += 1
+    if fpsc == 60:
+        fpsc = 0
+        print "FPS:", 60.0/(time.time()-t)
+        t = time.time()
+
     for event in pygame.event.get():
         keystate.update(event)
     
     if keystate.state('QUIT'):
         pygame.quit()
         sys.exit()
+
 
     movex = 0
     movey = 0
@@ -104,7 +114,6 @@ while game:
                 groundTiles.append(col)
                 movey = 0
                 player.onGround = True
-                print a.yOverlap(b), a.xOverlap(b)
 
         if a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
 
@@ -146,12 +155,13 @@ while game:
     if not cols:
         player.model = player.nextModel(movex,movey)
 
-    print len(cols), len(leftTiles), len(rightTiles), len(cilingTiles), len(groundTiles)
+    #print len(cols), len(leftTiles), len(rightTiles), len(cilingTiles), len(groundTiles)
     player.update(delta)
     player.x += movex
     player.y += movey
 
 
+    #print time.time()-t
 
     # Draw stuff
     screen.fill((0,0,0))
