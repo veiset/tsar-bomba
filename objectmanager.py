@@ -1,12 +1,14 @@
-from lxml import etree
+from xml.etree import ElementTree as ET
 import pygame
 import collision 
 
 class StaticObjectManager():
 
     def __init__(self):
-        self.xml = open('data/static/entities.xml','r').read()
-        self.xml = etree.fromstring(self.xml)
+        xml = open('data/static/entities.xml','r')
+        root = ET.XML(xml.read())
+        xml.close()
+
         self.entities = {}
 
         self.background = []
@@ -18,7 +20,7 @@ class StaticObjectManager():
                            'player'    : self.player,
                            'front'     : self.front}
 
-        for entity in self.xml.findall('ENTITY'):
+        for entity in root:
             name  = entity.find('NAME').text
             level = entity.find('LEVEL').text
             model = eval(entity.find('MODEL').text.replace('\n','').replace(' ',''))

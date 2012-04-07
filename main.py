@@ -22,7 +22,7 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Main')
 
 keystate = keypress.Keypress()
-player = playerEntity.Player('Vegard', (300,450), keystate)
+player = playerEntity.Player('Vegard', (50,250), keystate)
 
 npcs = []
 npcs.append(bearEntity.Bear('Mofo', (400,100)))
@@ -84,18 +84,18 @@ while game:
 
     for col in cols:
         a, b = col
-        if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
+        if a.hitsLeftOf(b) and a.xOverlap(b) <= a.yOverlap(b):
             leftTiles.append(b)
             movex = 0
-        elif a.hitsRightOf(b) and a.xOverlap(b) < a.yOverlap(b):
+        elif a.hitsRightOf(b) and a.xOverlap(b) <= a.yOverlap(b):
             rightTiles.append(b)
             movex = 0
-        elif a.hitsTopOf(b) and a.yOverlap(b) < a.xOverlap(b):
+        elif a.hitsTopOf(b) and a.yOverlap(b) <= a.xOverlap(b):
             groundTiles.append(col)
             movey = 0
             player.onGround = True
 
-        elif a.hitsBottomOf(b) and a.yOverlap(b) < a.xOverlap(b):
+        elif a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
             cilingTiles.append(col)
             movey = 0
 
