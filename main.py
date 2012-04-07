@@ -19,7 +19,7 @@ fpsClock = pygame.time.Clock()
 pygame.init()
 
 screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption('Main')
+pygame.display.set_caption('Tsar Bomba')
 
 keystate = keypress.Keypress()
 player = playerEntity.Player('Vegard', (50,250), keystate)
@@ -51,7 +51,7 @@ while game:
     fpsc += 1
     if fpsc == 60:
         fpsc = 0
-        print "FPS:", 60.0/(time.time()-t)
+        pygame.display.set_caption("Tsar Bomba - FPS: " +  str(int(60.0/(time.time()-t))))
         t = time.time()
 
     for event in pygame.event.get():
@@ -170,6 +170,5 @@ while game:
     player.draw(screen)
     som.draw(screen, som.front)
 
-    pygame.display.update()
     fpsClock.tick(60)
-    
+    pygame.display.flip()
