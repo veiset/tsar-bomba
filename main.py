@@ -48,9 +48,9 @@ while game:
         pygame.quit()
         sys.exit()
 
-    # Handle input
     movex = 0
     movey = 0
+    # Handle input
     if keystate.state('LEFT'):
         movex += -2.0
     if keystate.state('RIGHT'):
@@ -59,25 +59,75 @@ while game:
         movey += 2.0
     if keystate.state('UP'):
         movey += -2.0
+        player.onGround = False
     
 
-    hitbox = player.hitbox()
-    hitbox.x += movex
-    hitbox.y += movey
 
-    #movey -= physics.gravity(player.y, player.dy, delta)
-    
-    col = {}
-    for element in som.player:
-        col = collision.overlap(hitbox, som.hitbox(element), col)
-    
-    print col
+    movey -= physics.gravity(player.y, player.dy, delta)
+
+    treeBound = collision.calcBound(som.player[0]['model'], som.player[0]['pos'], 10)
+    bound = collision.calcBound(player.model['RIGHT'], (player.x+movex, player.y+movey), player.size)
+   
+    cols = collision.collision(bound, treeBound)
+    groundTiles = []
+    cilingTiles = []
+    leftTiles   = []
+    rightTiles  = []
+   
+    player.onGround = False
+
+    for col in cols:
+        a, b = col
+        if a.hitsTopOf(b) and a.yOverlap(b) < a.xOverlap(b):
+            groundTiles.append(col)
+            movey = 0
+            player.onGround = True
+
+        if a.hitsBottomOf(b) and a.yOverlap(b) < a.xOverlap(b):
+            cilingTiles.append(col)
+            movey = 0
+
+        if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
+            leftTiles.append(b)
+        if a.hitsRightOf(b) and a.xOverlap(b) < a.yOverlap(b):
+            rightTiles.append(b)
+
+    print "   ", len(cols), len(cilingTiles), len(groundTiles), len(leftTiles), len(rightTiles)
 
 
-    if not col:
+    for col in cilingTiles:
+        a, b = col
+        if (a.intersect(b)):
+            cols.remove(col)
+
+    if not player.onGround:
+        for col in cols:
+            a, b = col
+            if a.intersect(b):
+                if (a.hitsLeftOf(b) or a.hitsRightOf(b)):
+                    ''' '''
+
+    else:
+        for col in groundTiles:
+            a, b = col
+            if (a.intersect(b)):
+                if (a.hitsTopOf(b)):
+                    try:
+                        cols.remove(col)
+                    except:
+                        ''' tile was also a ciling '''
+    print ">> ", len(cols), len(cilingTiles), len(groundTiles), len(leftTiles), len(rightTiles)
+
+    for col in cols:
+        a, b = col
+        if a.intersect(b):
+            if (a.hitsRightOf(b) or a.hitsLeftOf(b)):
+                ''' '''
+
+    if not cols:
         player.update(delta)
-        player.y += movey
         player.x += movex
+        player.y += movey
 
 
 

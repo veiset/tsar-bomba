@@ -28,10 +28,6 @@ class Player():
         self.dy = self.y
         self.animation = 'RIGHT' 
         self.onGround = False
-        self.blocked = {'LEFT' : False,
-                        'RIGHT': False,
-                        'DOWN' : False, 
-                        'UP'   : False}
 
         self.key = keystate
         self.size = 10
@@ -46,61 +42,34 @@ class Player():
             direction['UP'] = True
         if (self.y>self.dy):
             direction['DOWN'] = True
-
         return direction
 
-    def hitbox(self):
-
-        return collision.Hitbox(self.model[self.animation], (self.x, self.y), self.size)
 
     def update(self, delta):
 
         self.dy = self.y
         self.dx = self.x
     
-#        if self.y >= 500:
-#            self.y = 500
-#            self.blocked['DOWN'] = True
-#
-#        if not self.blocked['DOWN']:
-#            self.y -= physics.gravity(self.y, tmp, delta)
-#        
-#
-#        if self.key.state('RIGHT'):
-#            self.blocked["DOWN"] = False
-#            if self.key.state('DOWN'):
-#                self.x += 1.0
-#            else:
-#                self.x += 2.0
-#
-#        if self.key.state('LEFT'):
-#            self.blocked["DOWN"] = False
-#            if self.key.state('DOWN'):
-#                self.x -= 1.0
-#            else:
-#                self.x -= 2.0
-#        
-#        if self.key.state('UP'):
-#            if self.blocked['DOWN']:
-#                self.y -= 5
-#                self.blocked["DOWN"] = False
-#            if self.animation == 'DOWN_RIGHT':
-#                self.animation = 'RIGHT'
-#            if self.animation == 'DOWN_LEFT':
-#                self.animation = 'LEFT'
-#
-#        if self.key.state('DOWN'):
-#            if self.blocked['DOWN']:
-#                if self.key.lastDirection == 'RIGHT':
-#                    self.animation = 'DOWN_RIGHT'
-#                else:
-#                    self.animation = 'DOWN_LEFT'
-#
-#        elif self.key.state('RIGHT'):
-#            self.animation = 'RIGHT'
-#        elif self.key.state('LEFT'):
-#            self.animation = 'LEFT'
-        
+    def pushOffX(self, a, b):
+        '''
+        a -- boundedBox from self.model 
+        b -- boundedBox of another entity
+        '''
+        if a.hitsLeftOf(b):
+            self.x -= (a.right - b.left)
+        elif a.hitsRightOf(b):
+            self.x += (b.right - a.left)
+
+    def pushOffY(self, a, b):
+        '''
+        a -- boundedBox from self.model 
+        b -- boundedBox of another entity
+        '''
+        if a.hitsTopOf(b):
+            self.y -= a.bottom - b.top
+        elif a.hitsBottomOf(b):
+            self.y += b.bottom - a.top
+
 
     def draw(self, screen):
         m = self.model[self.animation]
