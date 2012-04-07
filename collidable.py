@@ -12,10 +12,7 @@ class Collidable():
         b  -- boundedbox of collidable entity
         '''
 
-        directions = [self.hitsBottomOf(b), self.hitsTopOf(b), self.hitsLeftOf(b), self.hitsRightOf(b)]
-        col = (directions[0] or directions[1] ) and ( directions[2] or directions[3] )
-        if col:
-            return self, b
+        return ( (self.hitsBottomOf(b) or self.hitsTopOf(b)) and ( self.hitsLeftOf(b) or self.hitsRightOf(b)))
 
     def xOverlap(self, b):
         if (self.hitsTopOf(b) or self.hitsBottomOf(b)):

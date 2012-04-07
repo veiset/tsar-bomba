@@ -12,11 +12,11 @@ def collision(al, bl):
     '''
     cols = []
 
+
     for a in al:
         for b in bl:
-            col = a.intersect(b)
-            if col:
-                cols.append(col)
+            if a.intersect(b):
+                cols.append((a,b))
 
     return cols
 
