@@ -70,10 +70,10 @@ while game:
 
     movey -= physics.gravity(player.y, player.dy, delta)
 
-    bound = collision.calcBound(player.nextModel(), (player.x+movex, player.y+movey), player.size)
+    bound = collision.calcBound(player.nextModel(movex,movey), (player.x+movex, player.y+movey), player.size)
     cols = []
     for el in som.player:
-        cols.extend(collision.collision(bound, collision.calcBound(el['model'],el['pos'],10)))
+        cols.extend(collision.collision(bound, el['bbox']))
 
     groundTiles = []
     cilingTiles = []
@@ -84,22 +84,26 @@ while game:
 
     for col in cols:
         a, b = col
-        if a.hitsLeftOf(b) and a.xOverlap(b) <= a.yOverlap(b):
+        if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
             leftTiles.append(b)
             movex = 0
-        elif a.hitsRightOf(b) and a.xOverlap(b) <= a.yOverlap(b):
+        if a.hitsRightOf(b) and a.xOverlap(b) < a.yOverlap(b):
             rightTiles.append(b)
             movex = 0
-        elif a.hitsTopOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-            groundTiles.append(col)
-            movey = 0
-            player.onGround = True
+        if a.hitsTopOf(b) and a.yOverlap(b) <= a.xOverlap(b):
+            if a.xOverlap(b) > movex:
+                groundTiles.append(col)
+                movey = 0
+                player.onGround = True
 
-        elif a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-            cilingTiles.append(col)
-            movey = 0
+        if a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
+            if a.xOverlap(b) > movex:
+                cilingTiles.append(col)
+                movey = 0
 
 
+
+    #print len(cols), len(leftTiles), len(rightTiles), len(groundTiles), len(cilingTiles)
     for col in cilingTiles:
         a, b = col
         if (a.intersect(b)):
@@ -128,7 +132,8 @@ while game:
                 ''' '''
 
     if not cols:
-        player.model = player.nextModel()
+        player.model = player.nextModel(movex,movey)
+
 
     player.update(delta)
     player.x += movex

@@ -34,7 +34,8 @@ class StaticObjectManager():
             obj = {'name'  : name,
                    'level' : entity['level'], 
                    'model' : entity['model'],
-                   'pos'   : position}
+                   'pos'   : position,
+                   'bbox'  : collision.calcBound(entity['model'],position,self.size)}
 
             if not layer:
                 self.entityDict[entity['level']].append(obj)

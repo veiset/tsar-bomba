@@ -32,20 +32,20 @@ class Player():
         self.key = keystate
         self.size = 10
 
-    def direction(self):
+    def direction(self,x,y):
         direction = {'RIGHT': False, 'LEFT': False, 'UP': False, 'DOWN': False}
-        if (self.x>self.dx):
+        if (self.x+x>self.x):
             direction['RIGHT'] = True
-        if (self.x<self.dx):
+        if (self.x+x<self.x):
             direction['LEFT'] = True
-        if (self.y<self.dy):
+        if (self.y+y<self.y):
             direction['UP'] = True
-        if (self.y>self.dy):
+        if (self.y+y>self.y):
             direction['DOWN'] = True
         return direction
 
-    def nextModel(self):
-        d = self.direction()
+    def nextModel(self,x,y):
+        d = self.direction(x,y)
         if (d['RIGHT']):
             return self.modellist['RIGHT']
         elif (d['LEFT']):
