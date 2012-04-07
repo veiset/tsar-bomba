@@ -70,13 +70,15 @@ while game:
 
     movey -= physics.gravity(player.y, player.dy, delta)
 
-    #t = time.time()
     bound = collision.calcBound(player.nextModel(movex,movey), (player.x+movex, player.y+movey), player.size)
-    cols = []
-    for el in som.player:
-        cols.extend(collision.collision(bound, el['bbox']))
 
+    cols = []
+    #t = time.time()
+    for el in som.player:
+        r = collision.collision(bound, el['bbox'])
+        cols.extend(r)
     #print time.time()-t
+
 
     groundTiles = []
     cilingTiles = []

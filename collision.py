@@ -15,7 +15,10 @@ def collision(al, bl):
 
     for a in al:
         for b in bl:
-            if a.intersect(b):
+            if (((a.top >= b.top and a.top < b.bottom) or (a.bottom <= b.bottom and a.bottom  > b.top))
+                and
+                ((a.left <= b.left and a.right > b.left) or (a.right >= b.right and a.left < b.right))):
+            #if a.intersect(b):
                 cols.append((a,b))
 
     return cols
