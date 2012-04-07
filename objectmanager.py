@@ -5,6 +5,8 @@ import collision
 class StaticObjectManager():
 
     def __init__(self):
+        self.grid = {}
+
         xml = open('data/static/entities.xml','r')
         root = ET.XML(xml.read())
         xml.close()
@@ -31,16 +33,51 @@ class StaticObjectManager():
     def add(self, name, position, layer=None):
         if name in self.entities:
             entity = self.entities[name]
+
+            model =  entity['model']
+            if layer=="player":
+                self.colGrid(model, position)
+
             obj = {'name'  : name,
                    'level' : entity['level'], 
-                   'model' : entity['model'],
+                   'model' : model,
                    'pos'   : position,
-                   'bbox'  : collision.calcBound(entity['model'],position,self.size)}
+                   'bbox'  : collision.calcBound(model, position,self.size)}
 
             if not layer:
                 self.entityDict[entity['level']].append(obj)
             else:
                 self.entityDict[layer].append(obj)
+
+    def getStaticGrid(self, pos, rows, cols):
+        posx, posy = pos
+        posx = int((posx/self.size))
+        posy = int((posy/self.size))
+        m = [[0 for _ in range(cols+4)] for _ in range(rows+4)] 
+
+        for r in range(rows+4):
+            for i in range(cols+4):
+                try:
+                    m[r][i] = self.grid[(i+posx)-2][(posy-rows+r)]
+                except:
+                    ''' nothing '''
+
+        return m, (posx*self.size-2*10,posy*self.size+4*10), self.size
+
+    def colGrid(self, model, pos):
+        posx, posy = pos
+        posx = int(round(float(posx)/self.size))
+        posy = int(round(float(posy)/self.size))
+
+        for r, row in enumerate(model):
+            for i, element in enumerate(row):
+                if element:
+                    try: 
+                        self.grid[i+posx][posy-len(model)+r] = True
+                    except:
+                        self.grid[i+posx] = {posy-len(model)+r : True } 
+
+        #self.getStaticGrid((17,510),4,4)
 
     def draw(self, screen, entities):
         for entity in entities:

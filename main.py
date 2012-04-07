@@ -40,7 +40,7 @@ som.add('Floor01',(0,520),'player')
 som.add('Floor01',(200,520),'player')
 som.add('Floor01',(400,520),'player')
 som.add('Floor01',(230,320),'player')
-som.add('IceTap01',(500,280))
+som.add('IceTap01',(500,280),'player')
 
 delta = (1/60.0)*1000
 game = True
@@ -71,14 +71,15 @@ while game:
     movey -= physics.gravity(player.y, player.dy, delta)
 
     bound = collision.calcBound(player.nextModel(movex,movey), (player.x+movex, player.y+movey), player.size)
-
     cols = []
     #t = time.time()
-    for el in som.player:
-        r = collision.collision(bound, el['bbox'])
-        cols.extend(r)
+    #for el in som.player:
+    #    r = collision.collision(bound, el['bbox'])
+    #    cols.extend(r)
     #print time.time()-t
 
+    static = collision.calcBound(*som.getStaticGrid((player.x, player.y), 4, 4))
+    cols = collision.collision(bound, static)
 
     groundTiles = []
     cilingTiles = []
@@ -96,19 +97,15 @@ while game:
             rightTiles.append(b)
             movex = 0
         if a.hitsTopOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-            if a.xOverlap(b) > movex:
-                groundTiles.append(col)
-                movey = 0
-                player.onGround = True
+            groundTiles.append(col)
+            movey = 0
+            player.onGround = True
 
         if a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-            if a.xOverlap(b) > movex:
-                cilingTiles.append(col)
-                movey = 0
+            cilingTiles.append(col)
+            movey = 0
 
 
-
-    #print len(cols), len(leftTiles), len(rightTiles), len(groundTiles), len(cilingTiles)
     for col in cilingTiles:
         a, b = col
         if (a.intersect(b)):
