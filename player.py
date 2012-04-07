@@ -55,52 +55,51 @@ class Player():
 
     def update(self, delta):
 
-        tmp = self.dy
         self.dy = self.y
         self.dx = self.x
     
-        if self.y >= 500:
-            self.y = 500
-            self.blocked['DOWN'] = True
-
-        if not self.blocked['DOWN']:
-            self.y -= physics.gravity(self.y, tmp, delta)
-        
-
-        if self.key.state('RIGHT'):
-            self.blocked["DOWN"] = False
-            if self.key.state('DOWN'):
-                self.x += 1.0
-            else:
-                self.x += 2.0
-
-        if self.key.state('LEFT'):
-            self.blocked["DOWN"] = False
-            if self.key.state('DOWN'):
-                self.x -= 1.0
-            else:
-                self.x -= 2.0
-        
-        if self.key.state('UP'):
-            if self.blocked['DOWN']:
-                self.y -= 5
-                self.blocked["DOWN"] = False
-            if self.animation == 'DOWN_RIGHT':
-                self.animation = 'RIGHT'
-            if self.animation == 'DOWN_LEFT':
-                self.animation = 'LEFT'
-
-        if self.key.state('DOWN'):
-            if self.blocked['DOWN']:
-                if self.key.lastDirection == 'RIGHT':
-                    self.animation = 'DOWN_RIGHT'
-                else:
-                    self.animation = 'DOWN_LEFT'
-
-        elif self.key.state('RIGHT'):
-            self.animation = 'RIGHT'
-        elif self.key.state('LEFT'):
-            self.animation = 'LEFT'
+#        if self.y >= 500:
+#            self.y = 500
+#            self.blocked['DOWN'] = True
+#
+#        if not self.blocked['DOWN']:
+#            self.y -= physics.gravity(self.y, tmp, delta)
+#        
+#
+#        if self.key.state('RIGHT'):
+#            self.blocked["DOWN"] = False
+#            if self.key.state('DOWN'):
+#                self.x += 1.0
+#            else:
+#                self.x += 2.0
+#
+#        if self.key.state('LEFT'):
+#            self.blocked["DOWN"] = False
+#            if self.key.state('DOWN'):
+#                self.x -= 1.0
+#            else:
+#                self.x -= 2.0
+#        
+#        if self.key.state('UP'):
+#            if self.blocked['DOWN']:
+#                self.y -= 5
+#                self.blocked["DOWN"] = False
+#            if self.animation == 'DOWN_RIGHT':
+#                self.animation = 'RIGHT'
+#            if self.animation == 'DOWN_LEFT':
+#                self.animation = 'LEFT'
+#
+#        if self.key.state('DOWN'):
+#            if self.blocked['DOWN']:
+#                if self.key.lastDirection == 'RIGHT':
+#                    self.animation = 'DOWN_RIGHT'
+#                else:
+#                    self.animation = 'DOWN_LEFT'
+#
+#        elif self.key.state('RIGHT'):
+#            self.animation = 'RIGHT'
+#        elif self.key.state('LEFT'):
+#            self.animation = 'LEFT'
         
 
     def draw(self, screen):

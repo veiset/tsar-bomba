@@ -19,17 +19,26 @@ class Hitbox():
 
         return boxes
 
+def collision(player, objects):
 
-def overlap(player, static):
+    direction = {}
+    for element in objects:
+        direction = overlap(player, element.hitbox(), direction)
+
+    return direction
+
+def overlap(player, static, direction):
 
     bbox = player.calcBound()
     bbox2 = static.calcBound()
 
-
     for b in bbox:
         for bb in bbox2:
             m = match(b,bb)
-            if m: return m
+            if m: 
+                direction[m[0]] = m[1]
+
+    return direction
 
 
 def match(bbox, bbox2):
@@ -44,16 +53,16 @@ def match(bbox, bbox2):
         if ((x[0] < x2[0] and x2[0] < x[1])
             or (x[0] < x2[1] and x2[1] < x[1])):
             if y[0]-y2[0] > 5.0:
-                return "UP"
+                return "UP",bbox2
             elif y[0]-y2[0] < -5.0:
-                return "DOWN"
+                return "DOWN",bbox2
             
         if (not ((x[0] < x2[0] and x2[0] < x[1])
             or (x[0] < x2[1] and x2[1] < x[1]))
             and (x[0] <= x[1])):
             if(x[0]-x2[0] > 5.0):
-                return "LEFT"
+                return "LEFT",bbox2
             elif (x[0]-x2[0] < -5.0):
-                return "RIGHT"
+                return "RIGHT",bbox2
 
     return False

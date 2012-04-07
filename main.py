@@ -36,7 +36,7 @@ som.add('Tree01',(200,500))
 som.add('Tree01',(100,500),'background')
 som.add('Tree01',(400,500),'player')
 som.add('IceTap01',(500,280))
-f = floor.Floor((30,200,1000,10))
+f = floor.Floor((50,500,1000,10))
 
 delta = (1/60.0)*1000
 game = True
@@ -48,40 +48,47 @@ while game:
         pygame.quit()
         sys.exit()
 
+    # Handle input
+    movex = 0
+    movey = 0
+    if keystate.state('LEFT'):
+        movex += -2.0
+    if keystate.state('RIGHT'):
+        movex += 2.0
+    if keystate.state('DOWN'):
+        movey += 2.0
+    if keystate.state('UP'):
+        movey += -2.0
+    
 
-    screen.fill((0,0,0))
+    hitbox = player.hitbox()
+    hitbox.x += movex
+    hitbox.y += movey
 
-    col = collision.overlap(player.hitbox(),som.hitbox(som.player[0]))
+    #movey -= physics.gravity(player.y, player.dy, delta)
+    
+    col = {}
+    for element in som.player:
+        col = collision.overlap(hitbox, som.hitbox(element), col)
+    
     print col
-    if col:
-        player.blocked[col] = True
-        if not col == "DOWN":
-            player.x = player.dx
-        player.y = player.dy
-    else:
-        player.blocked = {'LEFT' : False,
-                        'RIGHT': False,
-                        'DOWN' : player.blocked["DOWN"],
-                        'UP'   : False}
-
-    player.update(delta)
 
 
+    if not col:
+        player.update(delta)
+        player.y += movey
+        player.x += movex
+
+
+
+    # Draw stuff
+    screen.fill((0,0,0))
     som.draw(screen, som.background)
-    f.draw(screen)
-
-
-
     som.draw(screen, som.player)
+    f.draw(screen)
     player.draw(screen)
-
-
-    #for npc in npcs:    
-    #    npc.update(delta)
-    #    npc.draw(screen)
-
     som.draw(screen, som.front)
 
     pygame.display.update()
-    fpsClock.tick(30)
+    fpsClock.tick(60)
     
