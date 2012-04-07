@@ -7,7 +7,7 @@ class Player():
     
     revModel = lambda x: [y[::-1] for y in x]
 
-    model = {'RIGHT':[[0,             (255,128,0),   (242,217,193),  0],
+    modellist = {'RIGHT':[[0,             (255,128,0),   (242,217,193),  0],
                      [(255,128,0),    (242,217,193), (242,217,193),  0],
                      [0,              (255,0,0),     (0,255,0),      (0, 255,0)],
                      [0,              (255,0,0),     (255,0,0),      0]],
@@ -18,15 +18,15 @@ class Player():
                       [0, (255,0,0), (255,0,0), (255,128,0), (242, 217, 193)],
                       [(255,0,0), (255,0,0), (255,0,0),0,0]]
             }
-    model['LEFT'] = revModel(model['RIGHT'])
-    model['DOWN_LEFT'] = revModel(model['DOWN_RIGHT'])
+    modellist['LEFT'] = revModel(modellist['RIGHT'])
+    modellist['DOWN_LEFT'] = revModel(modellist['DOWN_RIGHT'])
 
     def __init__(self, name, pos, keystate):
         self.name      = name
         self.x, self.y = pos
         self.dx = self.x
         self.dy = self.y
-        self.animation = 'RIGHT' 
+        self.model = self.modellist['RIGHT'] 
         self.onGround = False
 
         self.key = keystate
@@ -44,11 +44,19 @@ class Player():
             direction['DOWN'] = True
         return direction
 
+    def nextModel(self):
+        d = self.direction()
+        if (d['RIGHT']):
+            return self.modellist['RIGHT']
+        elif (d['LEFT']):
+            return self.modellist['LEFT']
+        return self.model
 
     def update(self, delta):
 
         self.dy = self.y
         self.dx = self.x
+
     
     def pushOffX(self, a, b):
         '''
@@ -72,7 +80,7 @@ class Player():
 
 
     def draw(self, screen):
-        m = self.model[self.animation]
+        m = self.model
         
         for r, row in enumerate(m):
             for i, element in enumerate(row):

@@ -35,8 +35,12 @@ npcs.append(dinoEntity.Dino('hei', (600, 100)))
 som.add('Tree01',(200,500))
 som.add('Tree01',(100,500),'background')
 som.add('Tree01',(400,500),'player')
+som.add('Floor01',(0,520),'player')
+som.add('Floor01',(0,520),'player')
+som.add('Floor01',(200,520),'player')
+som.add('Floor01',(400,520),'player')
+som.add('Floor01',(230,320),'player')
 som.add('IceTap01',(500,280))
-f = floor.Floor((50,500,1000,10))
 
 delta = (1/60.0)*1000
 game = True
@@ -56,19 +60,21 @@ while game:
     if keystate.state('RIGHT'):
         movex += 2.0
     if keystate.state('DOWN'):
-        movey += 2.0
+        ''' nothing currently '''
+        #movey += 2.0
     if keystate.state('UP'):
-        movey += -2.0
-        player.onGround = False
+        if player.onGround:
+            movey += -5.5
     
 
 
     movey -= physics.gravity(player.y, player.dy, delta)
 
-    treeBound = collision.calcBound(som.player[0]['model'], som.player[0]['pos'], 10)
-    bound = collision.calcBound(player.model['RIGHT'], (player.x+movex, player.y+movey), player.size)
-   
-    cols = collision.collision(bound, treeBound)
+    bound = collision.calcBound(player.nextModel(), (player.x+movex, player.y+movey), player.size)
+    cols = []
+    for el in som.player:
+        cols.extend(collision.collision(bound, collision.calcBound(el['model'],el['pos'],10)))
+
     groundTiles = []
     cilingTiles = []
     leftTiles   = []
@@ -78,21 +84,20 @@ while game:
 
     for col in cols:
         a, b = col
-        if a.hitsTopOf(b) and a.yOverlap(b) < a.xOverlap(b):
+        if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
+            leftTiles.append(b)
+            movex = 0
+        elif a.hitsRightOf(b) and a.xOverlap(b) < a.yOverlap(b):
+            rightTiles.append(b)
+            movex = 0
+        elif a.hitsTopOf(b) and a.yOverlap(b) < a.xOverlap(b):
             groundTiles.append(col)
             movey = 0
             player.onGround = True
 
-        if a.hitsBottomOf(b) and a.yOverlap(b) < a.xOverlap(b):
+        elif a.hitsBottomOf(b) and a.yOverlap(b) < a.xOverlap(b):
             cilingTiles.append(col)
             movey = 0
-
-        if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
-            leftTiles.append(b)
-        if a.hitsRightOf(b) and a.xOverlap(b) < a.yOverlap(b):
-            rightTiles.append(b)
-
-    print "   ", len(cols), len(cilingTiles), len(groundTiles), len(leftTiles), len(rightTiles)
 
 
     for col in cilingTiles:
@@ -106,7 +111,6 @@ while game:
             if a.intersect(b):
                 if (a.hitsLeftOf(b) or a.hitsRightOf(b)):
                     ''' '''
-
     else:
         for col in groundTiles:
             a, b = col
@@ -116,7 +120,6 @@ while game:
                         cols.remove(col)
                     except:
                         ''' tile was also a ciling '''
-    print ">> ", len(cols), len(cilingTiles), len(groundTiles), len(leftTiles), len(rightTiles)
 
     for col in cols:
         a, b = col
@@ -125,9 +128,11 @@ while game:
                 ''' '''
 
     if not cols:
-        player.update(delta)
-        player.x += movex
-        player.y += movey
+        player.model = player.nextModel()
+
+    player.update(delta)
+    player.x += movex
+    player.y += movey
 
 
 
@@ -135,7 +140,6 @@ while game:
     screen.fill((0,0,0))
     som.draw(screen, som.background)
     som.draw(screen, som.player)
-    f.draw(screen)
     player.draw(screen)
     som.draw(screen, som.front)
 
