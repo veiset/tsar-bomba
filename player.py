@@ -46,10 +46,10 @@ class Player():
 
     def nextModel(self,x,y):
         d = self.direction(x,y)
-        if (d['RIGHT']):
-            return self.modellist['RIGHT']
-        elif (d['LEFT']):
+        if (d['LEFT']):
             return self.modellist['LEFT']
+        elif (d['RIGHT']):
+            return self.modellist['RIGHT']
         return self.model
 
     def update(self, delta):
@@ -85,5 +85,5 @@ class Player():
         for r, row in enumerate(m):
             for i, element in enumerate(row):
                 if element:
-                    pygame.draw.rect(screen, element, (int(self.x)+(self.size*i), int(self.y)+(self.size*r)-len(m)*self.size, self.size, self.size)) 
+                    pygame.draw.rect(screen, element, (int(round(self.x,0))+(self.size*i), int(round(self.y,0))+(self.size*r)-len(m)*self.size, self.size, self.size)) 
         

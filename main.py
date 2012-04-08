@@ -68,7 +68,7 @@ while game:
     # Handle input
     if keystate.state('LEFT'):
         movex += -2.0
-    if keystate.state('RIGHT'):
+    elif keystate.state('RIGHT'):
         movex += 2.0
     if keystate.state('DOWN'):
         ''' nothing currently '''
@@ -97,6 +97,7 @@ while game:
     player.blockedLeft = False
     player.blockedRight = False
     cilingMin = 0.0
+    floorMin = 0.0
 
     for col in cols:
         a, b = col
@@ -114,18 +115,18 @@ while game:
                 groundTiles.append(col)
                 movey = 0
                 player.onGround = True
+                #print (a.bottom-b.top)
+                if floorMin > a.bottom-b.top:
+                    floorMin = a.bottom-b.top
 
         if a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
 
             if a.xOverlap(b) > movex and a.xOverlap(b) > 2.0:
                 cilingTiles.append(col)
                 player.onCiling = True
-                #movey = (player.dy-player.y) 
                 movey = 0
                 if cilingMin < (b.bottom-a.top):
                     cilingMin = (b.bottom-a.top)
-#            player.y = player.y+(a.top-b.bottom)
-                #player.x = player.dx
 
     if player.onCiling:
         player.y += cilingMin
@@ -137,7 +138,14 @@ while game:
             a, b = col
             if (a.hitsLeftOf(b) or a.hitsRightOf(b)):
                 ''' '''
+                try:
+                    cols.remove(col)
+                except:
+                    ''' '''
     else:
+        movey -= (-floorMin)
+        player.y += movey
+        player.dy = player.y
         for col in groundTiles:
             a, b = col
             if (a.hitsTopOf(b)):
