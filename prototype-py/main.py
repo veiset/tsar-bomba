@@ -18,7 +18,7 @@ fpsClock = pygame.time.Clock()
 
 pygame.init()
 
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((800, 600), pygame.DOUBLEBUF | pygame.HWSURFACE) #pygame.OPENGL)
 pygame.display.set_caption('Tsar Bomba')
 
 keystate = keypress.Keypress()
@@ -51,6 +51,9 @@ som.add('Floor01',(200,520),'player')
 som.add('Floor01',(400,520),'player')
 som.add('Floor01',(230,320),'player')
 som.add('IceTap01',(500,280),'player')
+
+print pygame.display.get_driver()
+print pygame.display.get_surface()
 
 delta = (1/60.0)*1000
 game = True
