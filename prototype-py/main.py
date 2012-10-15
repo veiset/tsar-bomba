@@ -2,72 +2,32 @@ import random
 import time
 import pygame, sys
 import player as playerEntity
-import world.floor as floor
-import npc.bear as bearEntity
-import npc.manne as manneEntity
-import npc.moose as mooseEntity
-import npc.police as policeEntity
-import npc.dino as dinoEntity
 import keypress
 import physics
 import objectmanager
+import levelmanager
 import collision
 
-som = objectmanager.StaticObjectManager()
 fpsClock = pygame.time.Clock()
-
 pygame.init()
 
-screen = pygame.display.set_mode((800, 600), pygame.DOUBLEBUF | pygame.HWSURFACE) #pygame.OPENGL)
+screen = pygame.display.set_mode((800, 600)) #, pygame.DOUBLEBUF | pygame.HWSURFACE) 
 pygame.display.set_caption('Tsar Bomba')
 
 keystate = keypress.Keypress()
 player = playerEntity.Player('Vegard', (50,250), keystate)
 
-npcs = []
-npcs.append(bearEntity.Bear('Mofo', (400,100)))
-npcs.append(manneEntity.Manne('F', (300,100)))
-npcs.append(mooseEntity.Moose('MOO', (200,100)))
-npcs.append(policeEntity.Police('lol', (500, 100)))
-npcs.append(dinoEntity.Dino('hei', (600, 100)))
-
-
-som.add('Tree01',(200,500))
-som.add('Tree01',(100,500),'background')
-for x in range(10):
-    for y in range(11): 
-        som.add('Mountain', (x*80,y*60),'background')
-
-som.add('House', (230,300),'background')
-som.add('Tree01',(400,500),'player')
-som.add('Floor01',(0,520),'player')
-som.add('Floor01',(0,520),'player')
-som.add('Floor01',(200,520),'player')
-som.add('Floor01',(400,520),'player')
-som.add('Floor01',(230,320),'player')
-som.add('IceTap01',(500,280),'player')
-
-backgroundSurf = pygame.Surface((800,600))
-som.draw(backgroundSurf, som.background)
-
-foregroundSurf = pygame.Surface((800,600),pygame.SRCALPHA)
-som.draw(foregroundSurf, som.front)
-
-print pygame.display.get_driver()
-print pygame.display.get_surface()
+som = objectmanager.StaticObjectManager(screen)
+level = levelmanager.LevelManager(som)
+level.load('01')
 
 delta = (1/60.0)*1000
 game = True
 fpsc = 0
 t = time.time()
-while game:
+tile = [0,0]
 
-    fpsc += 1
-    if fpsc == 60:
-        fpsc = 0
-        pygame.display.set_caption("Tsar Bomba - FPS: " +  str(int(60.0/(time.time()-t))))
-        print int(60.0/(time.time()-t))
-        t = time.time()
+while game:
 
     for event in pygame.event.get():
         keystate.update(event)
@@ -75,7 +35,6 @@ while game:
     if keystate.state('QUIT'):
         pygame.quit()
         sys.exit()
-
 
     movex = 0
     movey = 0
@@ -92,106 +51,42 @@ while game:
         if player.onGround:
             movey += -5.5
     
-
-
     movey -= physics.gravity(player.y, player.dy, delta)
 
     bound = collision.calcBound(player.nextModel(movex,movey), (player.x+movex, player.y+movey), player.size)
-    cols = []
-
     static = collision.calcBound(*som.getStaticGrid((player.x, player.y), 4, 4))
+
     cols = collision.collision(bound, static)
-
-    groundTiles = []
-    cilingTiles = []
-    leftTiles   = []
-    rightTiles  = []
-   
-    player.onGround = False
-    player.onCiling = False
-    player.blockedLeft = False
-    player.blockedRight = False
-    cilingMin = 0.0
-    floorMin = 0.0
-
-    for col in cols:
-        a, b = col
-        if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
-            leftTiles.append(b)
-            movex = 0
-            player.blockedRight = True
-        if a.hitsRightOf(b) and a.xOverlap(b) < a.yOverlap(b):
-            rightTiles.append(b)
-            movex = 0
-            player.blockedLeft = True
-
-        if a.hitsTopOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-            if a.xOverlap(b) > movex and a.xOverlap(b) > 2.0:
-                groundTiles.append(col)
-                movey = 0
-                player.onGround = True
-                #print (a.bottom-b.top)
-                if floorMin > a.bottom-b.top:
-                    floorMin = a.bottom-b.top
-
-        if a.hitsBottomOf(b) and a.yOverlap(b) <= a.xOverlap(b):
-
-            if a.xOverlap(b) > movex and a.xOverlap(b) > 2.0:
-                cilingTiles.append(col)
-                player.onCiling = True
-                movey = 0
-                if cilingMin < (b.bottom-a.top):
-                    cilingMin = (b.bottom-a.top)
-
-    if player.onCiling:
-        player.y += cilingMin
-        player.dy = player.y
-
-
-    if not player.onGround:
-        for col in cols:
-            a, b = col
-            if (a.hitsLeftOf(b) or a.hitsRightOf(b)):
-                ''' '''
-                try:
-                    cols.remove(col)
-                except:
-                    ''' '''
-    else:
-        movey -= (-floorMin)
-        player.y += movey
-        player.dy = player.y
-        for col in groundTiles:
-            a, b = col
-            if (a.hitsTopOf(b)):
-                try:
-                    cols.remove(col)
-                except:
-                    ''' tile was also a ciling '''
-
-    for col in cols:
-        a, b = col
-        if a.intersect(b):
-            if (a.hitsRightOf(b) or a.hitsLeftOf(b)):
-                ''' '''
-
-    if not cols:
-        player.model = player.nextModel(movex,movey)
-
-    #print len(cols), len(leftTiles), len(rightTiles), len(cilingTiles), len(groundTiles)
-    player.update(delta)
-    player.x += movex
-    player.y += movey
-
-
-    #print time.time()-t
+    collision.moveable(player, cols, movex, movey, delta)
 
     # Draw stuff
     screen.fill((0,0,0))
-    screen.blit(backgroundSurf,(0,0))
-    som.draw(screen, som.player)
+    som.blitBackground()
+    som.blitGround()
     player.draw(screen)
-    screen.blit(foregroundSurf,(0,0))
+    som.blitForeground()
 
-#    fpsClock.tick(120)
+    fpsClock.tick(60)
     pygame.display.flip()
+
+    playerSizeX, playerSizeY = player.bbox()
+
+    if player.x > 680: # TODO figure out this magic constant
+        player.x = -playerSizeX/2
+        print("Changed level x+1")
+    if player.x < -playerSizeX/2:
+        player.x = 680
+        print("Changed level x-1")
+    if player.y > 710:
+        player.dy -= player.y 
+        player.y = 0
+        print("Changed level y-1")
+    
+
+    # FPS
+    fpsc += 1
+    if fpsc == 60:
+        fpsc = 0
+        pygame.display.set_caption("Tsar Bomba - FPS: " +  str(int(60.0/(time.time()-t))))
+        print(int(60.0/(time.time()-t)))
+        t = time.time()

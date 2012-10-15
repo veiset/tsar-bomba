@@ -52,6 +52,12 @@ class Player():
             return self.modellist['RIGHT']
         return self.model
 
+    def bbox(self):
+        '''
+        Returns the size of pixels of the models bounded box.
+        '''
+        return (len(self.model[0])*self.size,len(self.model)*self.size)
+
     def update(self, delta):
 
         self.dy = self.y
@@ -85,5 +91,8 @@ class Player():
         for r, row in enumerate(m):
             for i, element in enumerate(row):
                 if element:
-                    pygame.draw.rect(screen, element, (int(round(self.x,0))+(self.size*i), int(round(self.y,0))+(self.size*r)-len(m)*self.size, self.size, self.size)) 
+                    pygame.draw.rect(screen, element, 
+                            (int(round(self.x,0))+(self.size*i), 
+                             int(round(self.y,0))+(self.size*r)-len(m)*self.size, 
+                             self.size, self.size)) 
         

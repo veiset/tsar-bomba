@@ -11,13 +11,7 @@ class Collidable():
         '''
         b  -- boundedbox of collidable entity
         '''
-
-        #return ( (self.hitsBottomOf(b) or self.hitsTopOf(b)) and ( self.hitsLeftOf(b) or self.hitsRightOf(b)))
-
-        return (((self.top >= b.top and self.top  < b.bottom) or (self.bottom <= b.bottom and self.bottom  > b.top))
-                and
-                ((self.left <= b.left and self.right > b.left) or (self.right >= b.right and self.left   < b.right)))
-
+        return ( (self.hitsBottomOf(b) or self.hitsTopOf(b)) and ( self.hitsLeftOf(b) or self.hitsRightOf(b)))
 
     def xOverlap(self, b):
         if (self.hitsTopOf(b) or self.hitsBottomOf(b)):
