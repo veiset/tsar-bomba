@@ -32,18 +32,13 @@ npcs.append(policeEntity.Police('lol', (500, 100)))
 npcs.append(dinoEntity.Dino('hei', (600, 100)))
 
 
-som.add('Mountain', (0,500), 'background')
-som.add('Mountain', (160,500), 'background')
-som.add('Mountain', (320,500), 'background')
-som.add('Mountain', (480,500), 'background')
-som.add('Mountain', (640,500), 'background')
-som.add('Mountain', (0,340), 'background')
-som.add('Mountain', (160,340), 'background')
-som.add('Mountain', (320,340), 'background')
-som.add('Mountain', (480,340), 'background')
-som.add('Mountain', (640,340), 'background')
 som.add('Tree01',(200,500))
 som.add('Tree01',(100,500),'background')
+for x in range(10):
+    for y in range(11): 
+        som.add('Mountain', (x*80,y*60),'background')
+
+som.add('House', (230,300),'background')
 som.add('Tree01',(400,500),'player')
 som.add('Floor01',(0,520),'player')
 som.add('Floor01',(0,520),'player')
@@ -51,6 +46,12 @@ som.add('Floor01',(200,520),'player')
 som.add('Floor01',(400,520),'player')
 som.add('Floor01',(230,320),'player')
 som.add('IceTap01',(500,280),'player')
+
+backgroundSurf = pygame.Surface((800,600))
+som.draw(backgroundSurf, som.background)
+
+foregroundSurf = pygame.Surface((800,600),pygame.SRCALPHA)
+som.draw(foregroundSurf, som.front)
 
 print pygame.display.get_driver()
 print pygame.display.get_surface()
@@ -65,6 +66,7 @@ while game:
     if fpsc == 60:
         fpsc = 0
         pygame.display.set_caption("Tsar Bomba - FPS: " +  str(int(60.0/(time.time()-t))))
+        print int(60.0/(time.time()-t))
         t = time.time()
 
     for event in pygame.event.get():
@@ -186,10 +188,10 @@ while game:
 
     # Draw stuff
     screen.fill((0,0,0))
-    som.draw(screen, som.background)
+    screen.blit(backgroundSurf,(0,0))
     som.draw(screen, som.player)
     player.draw(screen)
-    som.draw(screen, som.front)
+    screen.blit(foregroundSurf,(0,0))
 
-    fpsClock.tick(60)
+#    fpsClock.tick(120)
     pygame.display.flip()
