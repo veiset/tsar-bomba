@@ -11,7 +11,9 @@ import collision
 fpsClock = pygame.time.Clock()
 pygame.init()
 
-screen = pygame.display.set_mode((800, 600)) #, pygame.DOUBLEBUF | pygame.HWSURFACE) 
+SWIDTH, SHEIGHT = 800, 600
+
+screen = pygame.display.set_mode((SWIDTH, SHEIGHT)) #, pygame.DOUBLEBUF | pygame.HWSURFACE) 
 pygame.display.set_caption('Tsar Bomba')
 
 keystate = keypress.Keypress()
@@ -71,13 +73,13 @@ while game:
 
     playerSizeX, playerSizeY = player.bbox()
 
-    if player.x > 680: # TODO figure out this magic constant
+    if player.x > SWIDTH-(playerSizeX/2): # TODO figure out this magic constant
         player.x = -playerSizeX/2
         print("Changed level x+1")
     if player.x < -playerSizeX/2:
-        player.x = 680
+        player.x = SWIDTH-(playerSizeX/2) 
         print("Changed level x-1")
-    if player.y > 710:
+    if player.y > SHEIGHT+(playerSizeY/2):
         player.dy -= player.y 
         player.y = 0
         print("Changed level y-1")

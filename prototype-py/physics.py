@@ -1,5 +1,5 @@
 GRAVITY = -450.0
-GRAVITY_MAX_SPEED = -5
+GRAVITY_MAX_SPEED = -15
 
 def gravity(y, dy, delta):
     dt       = delta * 0.001

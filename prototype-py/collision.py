@@ -44,6 +44,9 @@ def moveable(player, cols, movex, movey, delta):
     cilingTiles = []
     leftTiles   = []
     rightTiles  = []
+
+    direction = (player.dx-player.x, player.dy-player.y)
+    #print direction
    
     player.onGround = False
     player.onCiling = False
