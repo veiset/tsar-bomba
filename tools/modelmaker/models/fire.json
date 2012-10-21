@@ -4,6 +4,7 @@
         "rows": 20, 
         "cols": 20
     }, 
+    "speed": 2, 
     "name": "unknown", 
     "bounds": {
         "rows": 15, 

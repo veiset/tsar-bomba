@@ -43,6 +43,7 @@ class PixelModel():
         self.cols = cols
         self.frames = frames
         self.name = name
+        self.speed = 1
 
         self.framelist = []
         for frame in range(frames):
@@ -73,6 +74,7 @@ class BoundedModel():
         self.name = model.name
         self.rows = model.rows
         self.cols = model.cols
+        self.speed = model.speed
         self.frames = model.frames
         self.bounds = self.bound(model)
         self.bmodel = self.boundedModel(model, self.bounds)

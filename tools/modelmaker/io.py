@@ -6,6 +6,7 @@ def modelToJson(model):
     model = BoundedModel(model)
     mjson = json.dumps(
                 {"name" : model.name,
+                 "speed" : model.speed, 
                  "bounds" : {"rows" : model.bounds[0],
                              "cols" : model.bounds[1],
                              "rowOffset" : model.bounds[2],
@@ -44,6 +45,7 @@ def jsonToModel(mjson):
                     if col != 0:
                         colorgrid.setPixel(r+rowOffset, c+colOffset, tuple(col))
 
+    model.speed = data["speed"]
     return model
 
 def loadFile(argv):

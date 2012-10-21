@@ -23,6 +23,7 @@ frameIndex = 0
 speedTicks = [1,3,6,10,30]
 
 filename, model = io.loadFile(sys.argv)
+speed = model.speed
 
 print "Using: %s" % filename
 
@@ -79,6 +80,7 @@ while running:
             elif gui.areaSpeedButton(mx,my):
                 if (speed+1) == len(speedTicks): speed = 0
                 else: speed += 1
+                model.speed = speed
                 print("Animation speed:", speed)
 
             elif gui.areaModelTab(mx,my):
