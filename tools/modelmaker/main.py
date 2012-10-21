@@ -14,7 +14,6 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('tsar-bomba - Model Maker')
 pygame.mouse.set_visible(1)
 
-
 running = True
 playAnim = False
 speed = 0
@@ -22,16 +21,23 @@ colors = colset.colorList()
 currentColor = (255,0,0)
 colorHistory = []
 frameIndex = 0
+speedTicks = [1,3,6,10,30]
+
+if len(sys.argv) == 2:
+    filename = sys.argv[1]
+    try:
+        with open(filename) as f:
+            model = output.jsonToModel(f.read())
+    except:
+        model = PixelModel(20,20,20)
+else:
+    filename = "tmp" + str(time.time()) + ".json"
+    model = PixelModel(20,20,20)
+
+print "Using: %s" % filename
 
 gui = GUI(screen) # all static parts of the GUI is drawn
 gui.drawColor(currentColor)
-
-speedTicks = [1,3,6,10,30]
-model = PixelModel(20,20,20)
-
-f = file("models/fire.json","r")
-model = output.jsonToModel(f.read())
-f.close()
 gui.drawFrame(model.frame(frameIndex).grid)
 
 while running:
@@ -96,10 +102,14 @@ while running:
                 gui.drawCurrentTab(frameIndex)
 
         if event.type == KEYDOWN:
-            print output.modelToJson(model)
             if event.key == K_ESCAPE:
+                print "Exiting"
                 pygame.quit()
                 sys.exit()
+            else:
+                with open(filename,"w") as f:
+                    f.write(output.modelToJson(model))
+                print "Model written to %s" % filename
 
     if playAnim:
         if model.frame(frameIndex+1).isEmpty():

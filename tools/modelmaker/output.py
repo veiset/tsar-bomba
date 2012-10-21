@@ -19,7 +19,7 @@ def modelToJson(model):
 
     # avoid indenting the frames to make the json human readable
     mjson = mjson[:-2] + ",\n    " + json.dumps({
-        "frames" : [{frame.name : frame.grid} for frame in model.bmodel]})[1:]
+        "frames" : [{frame.name : frame.grid} for frame in model.bmodel]})[1:-1] + "\n}"
 
     return mjson
 
