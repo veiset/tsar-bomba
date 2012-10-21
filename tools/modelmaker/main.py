@@ -29,6 +29,11 @@ gui.drawColor(currentColor)
 speedTicks = [1,3,6,10,30]
 model = PixelModel(20,20,20)
 
+f = file("models/fire.json","r")
+model = output.jsonToModel(f.read())
+f.close()
+gui.drawFrame(model.frame(frameIndex).grid)
+
 while running:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -83,6 +88,7 @@ while running:
             elif gui.areaModelTab(mx,my):
                 if (frameIndex == mxGrid) and 19>mxGrid>0:
                     model.copyPreviousFrame(frameIndex)
+                    print("Copying previous frame")
 
                 print("Model frame tab:", mxGrid)
                 frameIndex = mxGrid
@@ -90,7 +96,7 @@ while running:
                 gui.drawCurrentTab(frameIndex)
 
         if event.type == KEYDOWN:
-            output.json(model)
+            print output.modelToJson(model)
             if event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()

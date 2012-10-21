@@ -2,6 +2,9 @@ import pygame
 import colset 
 
 class GUI():
+    '''
+    TODO: Fix scaling, remove magic constants
+    '''
 
     def __init__(self, screen):
         self.screen = screen
