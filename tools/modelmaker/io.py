@@ -1,5 +1,6 @@
 from model import BoundedModel, PixelModel
 import json
+import time
 
 def modelToJson(model):
     model = BoundedModel(model)
@@ -45,3 +46,20 @@ def jsonToModel(mjson):
 
     return model
 
+def loadFile(argv):
+    '''
+    Opens a file
+    '''
+    if len(argv) == 2:
+        filename = argv[1]
+        try:
+            with open(filename) as f:
+                model = jsonToModel(f.read())
+        except:
+            print "Could not open file %s. Creating new model." % filename
+            model = PixelModel(20,20,20)
+    else:
+        filename = "tmp" + str(time.time()) + ".json"
+        model = PixelModel(20,20,20)
+
+    return filename, model

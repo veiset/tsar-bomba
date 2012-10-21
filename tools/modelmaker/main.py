@@ -1,10 +1,9 @@
 import pygame
 from pygame.locals import *
 import random
-import time
 import sys
 import colset
-import output
+import io
 from gui import GUI
 from model import PixelModel
 
@@ -23,16 +22,7 @@ colorHistory = []
 frameIndex = 0
 speedTicks = [1,3,6,10,30]
 
-if len(sys.argv) == 2:
-    filename = sys.argv[1]
-    try:
-        with open(filename) as f:
-            model = output.jsonToModel(f.read())
-    except:
-        model = PixelModel(20,20,20)
-else:
-    filename = "tmp" + str(time.time()) + ".json"
-    model = PixelModel(20,20,20)
+filename, model = io.loadFile(sys.argv)
 
 print "Using: %s" % filename
 
@@ -108,7 +98,7 @@ while running:
                 sys.exit()
             else:
                 with open(filename,"w") as f:
-                    f.write(output.modelToJson(model))
+                    f.write(io.modelToJson(model))
                 print "Model written to %s" % filename
 
     if playAnim:
