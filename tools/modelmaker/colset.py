@@ -1,4 +1,4 @@
-rgb = [(255,0,0),
+RGB = [(255,0,0),
 (0,255,0),
 (0,0,255),
 (84,84,84),
@@ -665,3 +665,15 @@ rgb = [(255,0,0),
 (192,192,192),
 (84,84,84),
 (35,107,142)]
+
+def colorList():
+    colors = []
+    l = []
+    for i, x in enumerate(RGB):
+        l.append(x)     
+        if ((i+1)%16==0): # 16 colors per row
+            colors.append(l)
+            l = []
+    colors.append(l)
+
+    return colors
