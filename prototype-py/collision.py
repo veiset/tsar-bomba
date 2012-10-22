@@ -55,6 +55,11 @@ def moveable(player, cols, movex, movey, delta):
     cilingMin = 0.0
     floorMin = 0.0
 
+    '''
+    TODO: Should be done by 'ray-tracing'. 
+    Will now currently move through blocks and check collision
+    for blocks that should be blocked by closer blocks. 
+    '''
     for col in cols:
         a, b = col
         if a.hitsLeftOf(b) and a.xOverlap(b) < a.yOverlap(b):
